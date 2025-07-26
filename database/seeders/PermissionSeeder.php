@@ -21,7 +21,7 @@ class PermissionSeeder extends Seeder
         $audit = 'icons/audits.svg';
         $approval = 'icons/approval.svg';
         $activity = 'icons/activity.svg';
-        $management = 'icons/management.svg';
+        $about = 'icons/about.svg';
         Permission::factory()->create([
             "id" => PermissionEnum::users->value,
             "icon" => $users,
@@ -30,8 +30,9 @@ class PermissionSeeder extends Seeder
         ]);
         Permission::factory()->create([
             "id" => PermissionEnum::about->value,
-            "icon" => $management,
-            "name" => 'management',
+            "icon" => $about,
+            "name" => 'about',
+            "group_by" => 'management',
             "priority" => 2,
         ]);
         Permission::factory()->create([

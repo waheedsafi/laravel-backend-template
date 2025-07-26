@@ -21,23 +21,6 @@ class CountrySeeder extends Seeder
      */
     public function run(): void
     {
-
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
-        // Truncate the tables
-        DB::table('countries')->truncate();
-        DB::table('country_trans')->truncate();
-        DB::table('provinces')->truncate();
-        DB::table('districts')->truncate();
-        DB::table('district_trans')->truncate();
-        DB::table('province_trans')->truncate();
-        DB::table('nationalities')->truncate();
-        DB::table('nationality_trans')->truncate();
-
-
-        // Re-enable foreign key checks
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
-
         $country = [
             "Saudi Arabia" => [
                 "fa" => "عربستان سعودی",

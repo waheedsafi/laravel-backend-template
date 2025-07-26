@@ -25,7 +25,7 @@ class ApplicationController extends Controller
                 '/',
                 null,                          // null: use current domain
                 true,                 // secure only in production
-                false,                         // httpOnly
+                true,                         // httpOnly
                 false,                         // raw
                 'None' // for dev, use 'None' to allow cross-origin if needed
             );

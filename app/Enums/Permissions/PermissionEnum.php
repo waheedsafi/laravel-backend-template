@@ -9,7 +9,7 @@ enum PermissionEnum: int
     case configurations = 3; //configurations
     case users = 4; //users
     case audit = 5; //audit
-    case about = 6; //management/about
+    case about = 6; //about
     case approval = 7; //approval
     case activity = 8; //activity
 }

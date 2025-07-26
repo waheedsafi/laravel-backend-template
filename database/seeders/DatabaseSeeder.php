@@ -48,9 +48,12 @@ class DatabaseSeeder extends Seeder
         $this->call(CountrySeeder::class);
         $this->call(AboutSeeder::class);
         $this->call(RoleSeeder::class);
+        $this->call(StatusSeeder::class);
         $this->call(PermissionSeeder::class);
         $this->call(SubPermissionSeeder::class);
         $this->call(RolePermissionSeeder::class);
+        $this->call(JobAndUserSeeder::class);
+        $this->call(UserPermissionSeeder::class);
         $this->call(FaqSeeder::class);
     }
     public function languages(): void

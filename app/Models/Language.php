@@ -10,4 +10,7 @@ class Language extends Model
     /** @use HasFactory<\Database\Factories\LanguageFactory> */
     use HasFactory;
     protected $guarded = [];
+    protected $primaryKey = 'name';
+    public $incrementing = false;
+    protected $keyType = 'string';
 }

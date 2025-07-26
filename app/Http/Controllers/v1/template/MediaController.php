@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\v1\template;
 
 use Illuminate\Http\Request;
-use App\Traits\Helper\HelperTrait;
+use App\Traits\PathHelperTrait;
 use App\Http\Controllers\Controller;
 
 class MediaController extends Controller
 {
-    use HelperTrait;
+    use PathHelperTrait;
     public function publicFile(Request $request)
     {
         $filePath = $request->input('path');

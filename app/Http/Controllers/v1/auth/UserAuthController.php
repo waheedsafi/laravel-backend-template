@@ -7,16 +7,16 @@ use App\Models\Email;
 use App\Models\UserStatus;
 use Sway\Utils\StringUtils;
 use Illuminate\Http\Request;
-use App\Enums\Status\StatusEnum;
+use App\Traits\LogHelperTrait;
+use App\Enums\Statuses\StatusEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\Helper\LogHelperTrait;
 use App\Http\Requests\v1\auth\LoginRequest;
 use App\Repositories\User\UserRepositoryInterface;
-use App\Http\Requests\template\user\UpdateProfilePasswordRequest;
+use App\Http\Requests\v1\auth\UpdateProfilePasswordRequest;
 
 class UserAuthController extends Controller
 {
@@ -44,16 +44,15 @@ class UserAuthController extends Controller
             ->select(
                 'u.id',
                 "u.profile",
-                "u.grant_permission",
                 'u.full_name',
                 'u.username',
                 'c.value as contact',
                 'u.contact_id',
-                'e.value as email',
                 'r.name as role_name',
                 'u.role_id',
                 "mjt.value as job",
-                "u.created_at"
+                "e.value as email",
+                "u.created_at",
             )
             ->first();
 
@@ -65,7 +64,6 @@ class UserAuthController extends Controller
                     "username" => $user->username,
                     'email' => $user->email,
                     "profile" => $user->profile,
-                    "grant" => (bool) $user->grant_permission,
                     "role" => ["role" => $user->role_id, "name" => $user->role_name],
                     'contact' => $user->contact,
                     "job" => $user->job,
@@ -115,7 +113,6 @@ class UserAuthController extends Controller
                 ->select(
                     'u.id',
                     "u.profile",
-                    "u.grant_permission",
                     'u.full_name',
                     'u.username',
                     'c.value as contact',
@@ -127,10 +124,21 @@ class UserAuthController extends Controller
                 )
                 ->first();
 
-            $this->storeUserLog($request, $user->id, StringUtils::getModelName(User::class), "Login");
+            $this->storeUserLog($user->id, StringUtils::getModelName(User::class), "Login");
+            $cookie = cookie(
+                'access_token',
+                $loggedIn['access_token'],
+                60 * 24 * 30,
+                '/',
+                null,                          // null: use current domain
+                true,                 // secure only in production
+                true,                         // httpOnly
+                false,                         // raw
+                'None' // for dev, use 'None' to allow cross-origin if needed
+            );
             return response()->json(
                 [
-                    "token" => $loggedIn['tokens']['access_token'],
+                    // "token" => $loggedIn['access_token'],
                     "permissions" => $this->userRepository->userAuthFormattedPermissions($user->id),
                     "user" => [
                         "id" => $user->id,
@@ -138,7 +146,6 @@ class UserAuthController extends Controller
                         "username" => $user->username,
                         'email' => $credentials['email'],
                         "profile" => $user->profile,
-                        "grant" => (bool) $user->grant_permission,
                         "role" => ["role" => $user->role_id, "name" => $user->role_name],
                         'contact' => $user->contact,
                         "job" => $user->job,
@@ -148,7 +155,7 @@ class UserAuthController extends Controller
                 200,
                 [],
                 JSON_UNESCAPED_UNICODE
-            );
+            )->cookie($cookie);
         } else {
             return response()->json([
                 'message' => __('app_translation.user_not_found')
@@ -158,7 +165,7 @@ class UserAuthController extends Controller
 
     public function logout(Request $request)
     {
-        $this->storeUserLog($request, $request->user()->id, StringUtils::getModelName(User::class), "Logout");
+        $this->storeUserLog($request->user()->id, StringUtils::getModelName(User::class), "Logout");
 
         $request->user()->invalidateToken(); // Calls the invalidateToken method defined in the trait
         return response()->json([

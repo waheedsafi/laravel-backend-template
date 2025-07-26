@@ -14,60 +14,19 @@ class SubPermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->subUserPermissions();
-        $this->subConfigurationsPermissions();
-        $this->subAboutPermissions();
-        $this->subApprovalPermissions();
-        $this->subActivityPermissions();
+        $this->seedSubPermissions(SubPermissionEnum::USERS, PermissionEnum::users);
+        $this->seedSubPermissions(SubPermissionEnum::CONFIGURATIONS, PermissionEnum::configurations);
+        $this->seedSubPermissions(SubPermissionEnum::ABOUT, PermissionEnum::about);
+        $this->seedSubPermissions(SubPermissionEnum::APPROVALS, PermissionEnum::approval);
+        $this->seedSubPermissions(SubPermissionEnum::ACTIVITY, PermissionEnum::activity);
     }
-    public function subUserPermissions()
+    private function seedSubPermissions(array $group, PermissionEnum $permission): void
     {
-        foreach (SubPermissionEnum::USERS as $id => $role) {
+        foreach ($group as $id => $meta) {
             SubPermission::factory()->create([
-                "id" => $id,
-                "permission" => PermissionEnum::users->value,
-                "name" => $role,
-            ]);
-        }
-    }
-
-    public function subConfigurationsPermissions()
-    {
-        foreach (SubPermissionEnum::CONFIGURATIONS as $id => $role) {
-            SubPermission::factory()->create([
-                "id" => $id,
-                "permission" => PermissionEnum::configurations->value,
-                "name" => $role,
-            ]);
-        }
-    }
-    public function subAboutPermissions()
-    {
-        foreach (SubPermissionEnum::ABOUT as $id => $role) {
-            SubPermission::factory()->create([
-                "id" => $id,
-                "permission" => PermissionEnum::about->value,
-                "name" => $role,
-            ]);
-        }
-    }
-    public function subApprovalPermissions()
-    {
-        foreach (SubPermissionEnum::APPROVALS as $id => $role) {
-            SubPermission::factory()->create([
-                "id" => $id,
-                "permission" => PermissionEnum::approval->value,
-                "name" => $role,
-            ]);
-        }
-    }
-    public function subActivityPermissions()
-    {
-        foreach (SubPermissionEnum::ACTIVITY as $id => $role) {
-            SubPermission::factory()->create([
-                "id" => $id,
-                "permission" => PermissionEnum::activity->value,
-                "name" => $role,
+                'id' => $id,
+                'permission' => $permission->value,
+                'name' => $meta['label'],
             ]);
         }
     }

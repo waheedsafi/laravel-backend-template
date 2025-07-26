@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Traits\Helper;
+namespace App\Traits;
 
 
-trait HelperTrait
+trait PathHelperTrait
 {
     /**
      * Combines filePath with backend public path (.../app/public).
@@ -14,5 +14,9 @@ trait HelperTrait
     public function transformToPublic($filePath)
     {
         return storage_path() . "/app/public/{$filePath}";
+    }
+    public function transformToPrivate($filePath)
+    {
+        return storage_path() . "/app/private/{$filePath}";
     }
 }

@@ -34,7 +34,7 @@ return new class extends Migration
             $table->foreign('job_id')->references('id')->on('model_jobs')
                 ->onUpdate('cascade')
                 ->onDelete('no action');
-            $table->index(["email_id", "job_id", "role_id"]);
+            $table->index(["email_id", "job_id", "role_id", 'username']);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

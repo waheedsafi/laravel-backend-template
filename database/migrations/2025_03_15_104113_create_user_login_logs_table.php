@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('action');
             $table->string('ip_address', 50)->nullable();
             $table->string('browser');
-            $table->string('device');
+            $table->string('platform');
             $table->timestamps();
         });
     }

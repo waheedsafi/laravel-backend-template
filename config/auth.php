@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'user:api' => [
+            'driver' => 'sway',  // Custom driver for User guard
+            'provider' => 'users',     // This provider points to the User model
+        ],
     ],
 
     /*
