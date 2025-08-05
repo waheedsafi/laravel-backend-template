@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\v1\language\LocaleMiddleware;
 use App\Http\Middleware\v1\user\CheckUserAccessMiddleware;
+use App\Http\Middleware\v1\user\general\AllowSuperOnlyMiddleware;
 use App\Http\Middleware\v1\user\sub\HasSubPermissionMiddleware;
 use App\Http\Middleware\v1\user\main\HasMainPermissionMiddleware;
 
@@ -24,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 'userHasMainPermission' => HasMainPermissionMiddleware::class,
                 'userHasSubPermission' => HasSubPermissionMiddleware::class,
                 'checkUserAccess'  => CheckUserAccessMiddleware::class,
+                'allowSuperOnly'  => AllowSuperOnlyMiddleware::class,
             ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

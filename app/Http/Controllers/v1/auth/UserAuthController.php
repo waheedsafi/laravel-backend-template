@@ -40,7 +40,10 @@ class UserAuthController extends Controller
             })
             ->leftJoin('contacts as c', 'c.id', '=', 'u.contact_id')
             ->join('emails as e', 'e.id', '=', 'u.email_id')
-            ->join('roles as r', 'r.id', '=', 'u.role_id')
+            ->join('role_trans as rt', function ($join) use ($locale) {
+                $join->on('rt.role_id', '=', 'u.role_id')
+                    ->where('rt.language_name', $locale);
+            })
             ->select(
                 'u.id',
                 "u.profile",
@@ -48,8 +51,8 @@ class UserAuthController extends Controller
                 'u.username',
                 'c.value as contact',
                 'u.contact_id',
-                'r.name as role_name',
-                'u.role_id',
+                'rt.value as role_name',
+                'rt.role_id',
                 "mjt.value as job",
                 "e.value as email",
                 "u.created_at",
@@ -69,7 +72,7 @@ class UserAuthController extends Controller
                     "job" => $user->job,
                     "created_at" => $user->created_at,
                 ],
-                "permissions" => $this->userRepository->userAuthFormattedPermissions($user->id),
+                "permissions" => $this->userRepository->userAuthFormattedPermissions($user->role_id),
             ],
             200,
             [],
@@ -109,7 +112,10 @@ class UserAuthController extends Controller
                         ->where('mjt.language_name', $locale);
                 })
                 ->leftJoin('contacts as c', 'c.id', '=', 'u.contact_id')
-                ->join('roles as r', 'r.id', '=', 'u.role_id')
+                ->join('role_trans as rt', function ($join) use ($locale) {
+                    $join->on('rt.role_id', '=', 'u.role_id')
+                        ->where('rt.language_name', $locale);
+                })
                 ->select(
                     'u.id',
                     "u.profile",
@@ -117,8 +123,8 @@ class UserAuthController extends Controller
                     'u.username',
                     'c.value as contact',
                     'u.contact_id',
-                    'r.name as role_name',
-                    'u.role_id',
+                    'rt.value as role_name',
+                    'rt.role_id',
                     "mjt.value as job",
                     "u.created_at",
                 )

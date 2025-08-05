@@ -11,22 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_permissions', function (Blueprint $table) {
+        Schema::create('role_assignments', function (Blueprint $table) {
             $table->id();
-            $table->boolean('edit');
-            $table->boolean('delete');
-            $table->boolean('add');
-            $table->boolean('view');
-            $table->boolean("visible")->default(true);
-            $table->foreignId('user_id')
-                ->constrained()
+            $table->unsignedBigInteger('assigned_by');
+            $table->foreign('assigned_by')->references('id')->on('users')->onDelete('no action');
+            $table->unsignedBigInteger('assigner_role_id'); // who can assign
+            $table->foreign('assigner_role_id')->references('id')->on('roles')
                 ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onDelete('no action');
             $table->unsignedBigInteger('permission');
             $table->foreign('permission')->references('id')->on('permissions')
                 ->onUpdate('cascade')
-                ->onDelete('no action');
-            $table->index(["permission", "user_id", 'view']);
+                ->onDelete('cascade');
+            $table->index(["assigner_role_id", "assigned_by", 'permission']);
             $table->timestamps();
         });
     }
@@ -36,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_permissions');
+        Schema::dropIfExists('role_assignments');
     }
 };

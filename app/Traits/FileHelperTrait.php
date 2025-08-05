@@ -43,4 +43,29 @@ trait FileHelperTrait
         }
         return false;
     }
+    public function storePublicDocument(Request $request, $path, $docName = 'document')
+    {
+        $newPath = $this->transformToPublic($path);
+
+        !is_dir($newPath) && mkdir($newPath, 0777, true);
+
+        // 2. Store image in filesystem
+        $fileName = null;
+        if ($request->hasFile($docName)) {
+            $file = $request->file($docName);
+            $fileExtention = $file->extension();
+
+            if ($file != null) {
+                $fileName = Str::uuid() . '.' . $fileExtention;
+                $file->move($newPath, $fileName);
+
+                return [
+                    'path' => $path . $fileName,
+                    'name' => $file->getClientOriginalName(),
+                    'extension' => $fileExtention,
+                ];
+            }
+        }
+        return null;
+    }
 }

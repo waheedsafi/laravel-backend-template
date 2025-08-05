@@ -1,6 +1,11 @@
 <?php
 
 
+require __DIR__ . '/v1/template/contact.php';
+require __DIR__ . '/v1/template/roles.php';
+require __DIR__ . '/v1/template/division.php';
+require __DIR__ . '/v1/template/slideshow.php';
+require __DIR__ . '/v1/template/checklist.php';
 require __DIR__ . '/v1/template/job.php';
 require __DIR__ . '/v1/template/user.php';
 require __DIR__ . '/v1/template/faqs.php';

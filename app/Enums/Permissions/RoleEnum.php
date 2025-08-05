@@ -5,9 +5,7 @@ namespace App\Enums\Permissions;
 enum RoleEnum: int
 {
     case super = 1;
-    case admin = 2;
-    case user = 3;
-    case debugger = 4;
+    case debugger = 2;
 
     public static function getList(): array
     {

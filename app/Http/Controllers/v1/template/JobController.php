@@ -13,7 +13,7 @@ use App\Http\Requests\v1\job\JobStoreRequest;
 
 class JobController extends Controller
 {
-    public function jobs()
+    public function index()
     {
         $locale = App::getLocale();
         $tr = DB::table('model_jobs as mj')
@@ -67,7 +67,7 @@ class JobController extends Controller
                 'message' => __('app_translation.failed'),
             ], 400, [], JSON_UNESCAPED_UNICODE);
     }
-    public function job($id)
+    public function edit($id)
     {
         $job = DB::table('model_job_trans as mjt')
             ->where('mjt.model_job_id', $id)

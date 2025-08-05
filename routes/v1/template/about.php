@@ -2,6 +2,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Enums\Permissions\PermissionEnum;
+use App\Enums\Permissions\SubPermissionEnum;
 use App\Http\Controllers\v1\template\AboutController;
 
 
@@ -12,18 +14,21 @@ Route::prefix('v1')->group(function () {
   Route::get('/about/staffs', [AboutController::class, "staffs"]);
   // Route::get('/public/sliders', [AboutController::class, 'publicSliders']);
 });
-// Route::prefix('v1')->middleware(["authorized:" . 'user:api'])->group(function () {
-//   Route::get('/staff/director', [AboutController::class, "director"]);
-//   Route::get('/staff/manager', [AboutController::class, "manager"]);
-//   Route::get('/staff/technicalSupports', [AboutController::class, "technicalSupports"]);
-//   Route::post('/staff/store', [AboutController::class, "staffStore"]);
-//   Route::post('/office/store', [AboutController::class, "officeStore"]);
-//   Route::post('/office/update', [AboutController::class, "officeUpdate"]);
-//   Route::get('/staff/{id}', [AboutController::class, "staff"]);
-//   Route::post('/staff/update', [AboutController::class, 'update']);
-//   Route::delete('/staff/{id}', [AboutController::class, 'staffDestroy']);
-//   Route::post('/slider/store', [AboutController::class, 'sliderFileUpload']);
-//   Route::get('/sliders', [AboutController::class, 'sliders']);
-//   Route::delete('/slider/{id}', [AboutController::class, 'sliderDestroy']);
-//   Route::POST('/slider/change/status', [AboutController::class, 'changeStatusSlider']);
-// });
+Route::prefix('v1')->middleware(["authorized:" . 'user:api'])->group(function () {
+  Route::get('/about/director', [AboutController::class, "director"])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_director->value . ',' . 'view']);
+  Route::get('/about/manager', [AboutController::class, "manager"])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_manager->value . ',' . 'view']);
+  Route::get('/about/technical-support', [AboutController::class, "technicalSupport"])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_technical->value . ',' . 'view']);
+  Route::get('/about/office-detail', [AboutController::class, "editOffice"])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_office->value . ',' . 'view']);
+
+  Route::post('/about/technical-support', [AboutController::class, 'storeTechnicalSupport'])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_technical->value . ',' . 'add']);
+  Route::put('/about/technical-support', [AboutController::class, 'updateTechnicalSupport'])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_technical->value . ',' . 'add']);
+
+  Route::post('/about/manager', [AboutController::class, 'storeManager'])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_manager->value . ',' . 'add']);
+  Route::put('/about/manager', [AboutController::class, 'updateManager'])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_manager->value . ',' . 'edit']);
+
+  Route::post('/about/director', [AboutController::class, 'storeDirector'])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_director->value . ',' . 'add']);
+  Route::put('/about/director', [AboutController::class, 'updateDirector'])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_director->value . ',' . 'edit']);
+
+  Route::post('/about/office', [AboutController::class, 'storeOffice'])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_office->value . ',' . 'add']);
+  Route::put('/about/office', [AboutController::class, 'updateOffice'])->middleware(["userHasSubPermission:" . PermissionEnum::about->value . "," . SubPermissionEnum::about_office->value . ',' . 'edit']);
+});

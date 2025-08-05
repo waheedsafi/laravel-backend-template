@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\UserPermissionSub>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Sildeshow>
  */
-class UserPermissionSubFactory extends Factory
+class SildeshowFactory extends Factory
 {
     /**
      * Define the model's default state.

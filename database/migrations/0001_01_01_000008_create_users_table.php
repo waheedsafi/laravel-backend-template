@@ -34,12 +34,14 @@ return new class extends Migration
             $table->foreign('job_id')->references('id')->on('model_jobs')
                 ->onUpdate('cascade')
                 ->onDelete('no action');
-            $table->index(["email_id", "job_id", "role_id", 'username']);
+            $table->unsignedBigInteger('division_id');
+            $table->foreign('division_id')->references('id')->on('divisions')
+                ->onUpdate('cascade')
+                ->onDelete('no action');
+            $table->index(["email_id", "job_id", "role_id", 'username', 'division_id']);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
-            // Unique constraint for role_id = 1
-            // $table->unique(['role_id'], 'unique_role_id_1')->where('role_id = ' . RoleEnum::super->value);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -7,4 +7,14 @@ return [
     'server_error' => 'مشکلی پیش آمد، لطفاً بعداً دوباره امتحان کنید!',
     'file_not_found' => 'فایل پیدا نشد!',
     'success' => "با موفقیت انجام شد.",
+    'failed' => "عملیات ناموفق خورد.",
+    'staff_not_found' => "کارمند پیدا نشد!",
+    'slideshow_not_found' => "اسلایدشو پیدا نشد!",
+    'division_not_found' => "بخش پیدا نشد!",
+    'you_do_not' => 'شما ندارید.',
+    'access_to' => 'دسترسی به',
+    'unauthorized' => 'غیرمجاز',
+    'role_not_found' => 'نقش پیدا نشد!',
+    'duplicate_english' => 'ترجمه تکراری انگلیسی مجاز نیست.',
+    'select_item' => 'یک مورد را انتخاب کنید'
 ];

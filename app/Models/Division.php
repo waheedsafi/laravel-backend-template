@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class UserPermission extends Model
+class Division extends Model
 {
+    /** @use HasFactory<\Database\Factories\DivisionFactory> */
     use HasFactory;
     protected $guarded = [];
 }

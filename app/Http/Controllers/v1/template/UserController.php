@@ -19,22 +19,18 @@ use App\Http\Requests\v1\user\UpdateUserRequest;
 use App\Http\Requests\v1\user\UserRegisterRequest;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Http\Requests\v1\user\UpdateUserPasswordRequest;
-use App\Repositories\Permission\PermissionRepositoryInterface;
 
 class UserController extends Controller
 {
     use FileHelperTrait, FilterTrait;
     private $cacheName;
     protected $userRepository;
-    protected $permissionRepository;
 
     public function __construct(
-        UserRepositoryInterface $userRepository,
-        PermissionRepositoryInterface $permissionRepository
+        UserRepositoryInterface $userRepository
     ) {
         $this->cacheName = 'user_statistics';
         $this->userRepository = $userRepository;
-        $this->permissionRepository = $permissionRepository;
     }
     public function users(Request $request)
     {
@@ -73,7 +69,7 @@ class UserController extends Controller
                 "mjt.value as job"
             );
 
-        $this->applyDate($query, $request, 'n.created_at', 'n.created_at');
+        $this->applyDate($query, $request, 'u.created_at', 'u.created_at');
         $this->applyFilters($query, $request, [
             'username' => 'u.username',
             'created_at' => 'u.created_at',
@@ -154,6 +150,7 @@ class UserController extends Controller
     public function store(UserRegisterRequest $request)
     {
         $request->validated();
+        // 0. Check user a
         // 1. Check email
         $email = Email::where('value', '=', $request->email)->first();
         if ($email) {
@@ -193,22 +190,6 @@ class UserController extends Controller
             "contact_id" => $contact ? $contact->id : $contact,
             "profile" => null,
         ]);
-
-        // 4. Add user permissions
-        $result = $this->permissionRepository->storeUserPermission($newUser, $request->permissions);
-        if ($result == 400) {
-            return response()->json([
-                'message' => __('app_translation.user_not_found'),
-            ], 404, [], JSON_UNESCAPED_UNICODE);
-        } else if ($result == 401) {
-            return response()->json([
-                'message' => __('app_translation.unauthorized_role_per'),
-            ], 403, [], JSON_UNESCAPED_UNICODE);
-        } else if ($result == 402) {
-            return response()->json([
-                'message' => __('app_translation.per_not_found'),
-            ], 404, [], JSON_UNESCAPED_UNICODE);
-        }
         DB::commit();
         Cache::forget($this->cacheName);
         return response()->json([
@@ -217,7 +198,6 @@ class UserController extends Controller
                 "username" => $newUser->username,
                 'email' => $request->email,
                 "profile" => $newUser->profile,
-                "status" => $newUser->status,
                 "job" => $request->job,
                 "created_at" => $newUser->created_at,
             ],
@@ -277,8 +257,6 @@ class UserController extends Controller
             $user->username = $request->username;
             $user->role_id = $request->role;
             $user->job_id = $request->job;
-            $user->status = $request->status === "true" ? true : false;
-            $user->grant_permission = $request->grant === "true" ? true : false;
             $user->save();
 
             DB::commit();

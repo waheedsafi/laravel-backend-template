@@ -11,4 +11,5 @@ Route::prefix('v1')->group(function () {
     Route::get('/sports-books', [TestingController::class, "sportBooks"]);
     Route::get('/foods-books', [TestingController::class, "foodBooks"]);
     Route::get('/about-us', [TestingController::class, "aboutUs"]);
+    Route::get('/testing', [TestingController::class, "testing"]);
 });

@@ -7,8 +7,8 @@ interface UserRepositoryInterface
     /**
      * Retuns all user permissions.
      * 
-     * @param string $user_id
+     * @param string $role_id
      * @return mix
      */
-    public function userAuthFormattedPermissions($user_id);
+    public function userAuthFormattedPermissions($role_id);
 }

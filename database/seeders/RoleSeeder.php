@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
+use App\Models\RoleTrans;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use App\Enums\Permissions\RoleEnum;
 
 class RoleSeeder extends Seeder
@@ -13,21 +15,43 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::factory()->create([
+        $item = Role::factory()->create([
             "id" => RoleEnum::super,
-            "name" => "super"
         ]);
-        Role::factory()->create([
-            "id" => RoleEnum::admin,
-            "name" => "admin"
+        RoleTrans::factory()->create([
+            "value" => "کاربر فوق العاده",
+            "language_name" => "fa",
+            "role_id" => $item->id
         ]);
-        Role::factory()->create([
-            "id" => RoleEnum::user,
-            "name" => "user"
+        RoleTrans::factory()->create([
+            "value" => "ډېر کاروونکی",
+            "language_name" => "ps",
+            "role_id" => $item->id
         ]);
-        Role::factory()->create([
+        RoleTrans::factory()->create([
+            "value" => "Super user",
+            "language_name" => "en",
+            "role_id" => $item->id
+        ]);
+        $item = Role::factory()->create([
             "id" => RoleEnum::debugger,
-            "name" => "debugger"
         ]);
+        RoleTrans::factory()->create([
+            "value" => "دیبگر",
+            "language_name" => "fa",
+            "role_id" => $item->id
+        ]);
+        RoleTrans::factory()->create([
+            "value" => "ډیبګر",
+            "language_name" => "ps",
+            "role_id" => $item->id
+        ]);
+        RoleTrans::factory()->create([
+            "value" => "Debugger",
+            "language_name" => "en",
+            "role_id" => $item->id
+        ]);
+        // ✅ Reset sequence to avoid future conflicts
+        DB::statement("SELECT setval('roles_id_seq', (SELECT MAX(id) FROM roles))");
     }
 }

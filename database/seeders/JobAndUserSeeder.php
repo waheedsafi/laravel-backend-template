@@ -65,12 +65,6 @@ class JobAndUserSeeder extends Seeder
         $debuggerEmail =  Email::factory()->create([
             "value" => "debugger@admin.com"
         ]);
-        $adminEmail =  Email::factory()->create([
-            "value" => "admin@admin.com"
-        ]);
-        $userEmail =  Email::factory()->create([
-            "value" => "user@admin.com"
-        ]);
 
         $user = User::factory()->create([
             "id" => RoleEnum::super->value,
@@ -81,26 +75,14 @@ class JobAndUserSeeder extends Seeder
             'role_id' =>  RoleEnum::super,
             'contact_id' =>  $contact->id,
             'job_id' =>  $job->id,
+            'division_id' =>  14, // IRD Division
         ]);
         UserStatus::create([
             "user_id" => $user->id,
             "is_active" => true,
             "status_id" => StatusEnum::active->value,
         ]);
-        $user =  User::factory()->create([
-            "id" => RoleEnum::user->value,
-            'full_name' => 'Jalal Bakhti',
-            'username' => 'Jalal Bakhti',
-            'email_id' =>  $userEmail->id,
-            'password' =>  Hash::make("123123123"),
-            'role_id' =>  RoleEnum::user,
-            'job_id' =>  $job->id,
-        ]);
-        UserStatus::create([
-            "user_id" => $user->id,
-            "is_active" => true,
-            "status_id" => StatusEnum::active->value,
-        ]);
+
         $user = User::factory()->create([
             "id" => RoleEnum::debugger->value,
             'full_name' => 'Sayed Naweed Sayedy',
@@ -109,20 +91,7 @@ class JobAndUserSeeder extends Seeder
             'password' =>  Hash::make("123123123"),
             'role_id' =>  RoleEnum::debugger,
             'job_id' =>  $job->id,
-        ]);
-        UserStatus::create([
-            "user_id" => $user->id,
-            "is_active" => true,
-            "status_id" => StatusEnum::active->value,
-        ]);
-        $user = User::factory()->create([
-            "id" => RoleEnum::admin->value,
-            'full_name' => 'Waheed Safi',
-            'username' => 'Waheed',
-            'email_id' =>  $adminEmail->id,
-            'password' =>  Hash::make("123123123"),
-            'role_id' =>  RoleEnum::admin,
-            'job_id' =>  $job->id,
+            'division_id' =>  1, // IT Division
         ]);
         UserStatus::create([
             "user_id" => $user->id,

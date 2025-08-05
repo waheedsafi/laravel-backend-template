@@ -17,155 +17,101 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
         $this->superPermissions();
-        $this->adminPermissions();
-        $this->userPermissions();
         $this->debuggerPermissions();
     }
     public function superPermissions()
     {
         $rolePer = RolePermission::factory()->create([
             "role" => RoleEnum::super,
-            "permission" => PermissionEnum::users->value
+            "permission" => PermissionEnum::users->value,
+            'edit' => true,
+            'delete' => true,
+            'add' => true,
+            'view' => true,
         ]);
-        $this->rolePermissionSubUser($rolePer->id);
-        $rolePer = RolePermission::factory()->create([
-            "role" => RoleEnum::super,
-            "permission" => PermissionEnum::configurations->value
-        ]);
-        $this->rolePermissionSubConfigurations($rolePer->id);
-
-        RolePermission::factory()->create([
-            "role" => RoleEnum::super,
-            "permission" => PermissionEnum::reports->value
-        ]);
-        RolePermission::factory()->create([
-            "role" => RoleEnum::super,
-            "permission" => PermissionEnum::audit->value
-        ]);
+        $this->addSubPermissions(SubPermissionEnum::USERS, $rolePer->id);
 
         $rolePer = RolePermission::factory()->create([
             "role" => RoleEnum::super,
-            "permission" => PermissionEnum::about->value
+            "permission" => PermissionEnum::configurations->value,
+            'edit' => true,
+            'delete' => true,
+            'add' => true,
+            'view' => true,
         ]);
-        $this->rolePermissionSubAbout($rolePer->id);
+        $this->addSubPermissions(SubPermissionEnum::CONFIGURATIONS, $rolePer->id);
+
+        RolePermission::factory()->create([
+            "role" => RoleEnum::super,
+            "permission" => PermissionEnum::reports->value,
+            'edit' => true,
+            'delete' => true,
+            'add' => true,
+            'view' => true,
+        ]);
+        RolePermission::factory()->create([
+            "role" => RoleEnum::super,
+            "permission" => PermissionEnum::audit->value,
+            'edit' => true,
+            'delete' => true,
+            'add' => true,
+            'view' => true,
+        ]);
+
         $rolePer = RolePermission::factory()->create([
             "role" => RoleEnum::super,
-            "permission" => PermissionEnum::approval->value
+            "permission" => PermissionEnum::about->value,
+            'edit' => true,
+            'delete' => true,
+            'add' => true,
+            'view' => true,
         ]);
-        $this->rolePermissionSubApproval($rolePer->id);
+        $this->addSubPermissions(SubPermissionEnum::ABOUT, $rolePer->id);
+
         $rolePer = RolePermission::factory()->create([
             "role" => RoleEnum::super,
-            "permission" => PermissionEnum::activity->value
+            "permission" => PermissionEnum::approval->value,
+            'edit' => true,
+            'delete' => true,
+            'add' => true,
+            'view' => true,
         ]);
-        $this->rolePermissionSubActivity($rolePer->id);
+        $this->addSubPermissions(SubPermissionEnum::APPROVALS, $rolePer->id);
+
+        $rolePer = RolePermission::factory()->create([
+            "role" => RoleEnum::super,
+            "permission" => PermissionEnum::activity->value,
+            'edit' => true,
+            'delete' => true,
+            'add' => true,
+            'view' => true,
+        ]);
+        $this->addSubPermissions(SubPermissionEnum::ACTIVITY, $rolePer->id);
     }
-    public function adminPermissions()
+
+    private function addSubPermissions(array $group, $role_permission_id)
     {
-        $rolePer = RolePermission::factory()->create([
-            "role" => RoleEnum::admin,
-            "permission" => PermissionEnum::users->value
-        ]);
-        $this->rolePermissionSubUser($rolePer->id);
-        $rolePer = RolePermission::factory()->create([
-            "role" => RoleEnum::admin,
-            "permission" => PermissionEnum::configurations->value
-        ]);
-        $this->rolePermissionSubConfigurations($rolePer->id);
-
-        RolePermission::factory()->create([
-            "role" => RoleEnum::admin,
-            "permission" => PermissionEnum::reports->value
-        ]);
-
-        $rolePer = RolePermission::factory()->create([
-            "role" => RoleEnum::admin,
-            "permission" => PermissionEnum::about->value
-        ]);
-        $this->rolePermissionSubAbout($rolePer->id);
-        $rolePer = RolePermission::factory()->create([
-            "role" => RoleEnum::admin,
-            "permission" => PermissionEnum::approval->value
-        ]);
-        $this->rolePermissionSubApproval($rolePer->id);
-        $rolePer = RolePermission::factory()->create([
-            "role" => RoleEnum::admin,
-            "permission" => PermissionEnum::activity->value
-        ]);
-        $this->rolePermissionSubActivity($rolePer->id);
-    }
-    public function userPermissions()
-    {
-        $rolePer = RolePermission::factory()->create([
-            "role" => RoleEnum::user,
-            "permission" => PermissionEnum::configurations->value
-        ]);
-        $this->rolePermissionSubConfigurations($rolePer->id);
-
-        RolePermission::factory()->create([
-            "role" => RoleEnum::user,
-            "permission" => PermissionEnum::reports->value
-        ]);
-
-        $rolePer = RolePermission::factory()->create([
-            "role" => RoleEnum::user,
-            "permission" => PermissionEnum::about->value
-        ]);
-        $this->rolePermissionSubAbout($rolePer->id);
+        foreach ($group as $id => $meta) {
+            RolePermissionSub::factory()->create([
+                "edit" => true,
+                "delete" => true,
+                "add" => true,
+                "view" => true,
+                "is_category" => $meta['is_category'],
+                "role_permission_id" => $role_permission_id,
+                "sub_permission_id" => $id,
+            ]);
+        }
     }
     public function debuggerPermissions()
     {
         RolePermission::factory()->create([
             "role" => RoleEnum::debugger,
-            "permission" => PermissionEnum::logs->value
+            "permission" => PermissionEnum::logs->value,
+            'edit' => true,
+            'delete' => true,
+            'add' => true,
+            'view' => true,
         ]);
-    }
-
-    public function rolePermissionSubUser($role_permission_id)
-    {
-        foreach (SubPermissionEnum::USERS as $id => $role) {
-            RolePermissionSub::factory()->create([
-                "role_permission_id" => $role_permission_id,
-                "sub_permission_id" => $id
-            ]);
-        }
-    }
-
-
-    public function rolePermissionSubConfigurations($role_permission_id)
-    {
-        foreach (SubPermissionEnum::CONFIGURATIONS as $id => $role) {
-            RolePermissionSub::factory()->create([
-                "role_permission_id" => $role_permission_id,
-                "sub_permission_id" => $id
-            ]);
-        }
-    }
-
-    public function rolePermissionSubAbout($role_permission_id)
-    {
-        foreach (SubPermissionEnum::ABOUT as $id => $role) {
-            RolePermissionSub::factory()->create([
-                "role_permission_id" => $role_permission_id,
-                "sub_permission_id" => $id
-            ]);
-        }
-    }
-    public function rolePermissionSubApproval($role_permission_id)
-    {
-        foreach (SubPermissionEnum::APPROVALS as $id => $role) {
-            RolePermissionSub::factory()->create([
-                "role_permission_id" => $role_permission_id,
-                "sub_permission_id" => $id
-            ]);
-        }
-    }
-    public function rolePermissionSubActivity($role_permission_id)
-    {
-        foreach (SubPermissionEnum::ACTIVITY as $id => $role) {
-            RolePermissionSub::factory()->create([
-                "role_permission_id" => $role_permission_id,
-                "sub_permission_id" => $id
-            ]);
-        }
     }
 }

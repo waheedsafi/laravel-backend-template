@@ -19,11 +19,11 @@ class HasSubPermissionMiddleware
         $authUser = $request->user();
         if ($authUser) {
             // 1. Check user has user permission
-            $permission = DB::table("user_permissions as up")
-                ->where("user_id", "=", $authUser->id)
+            $permission = DB::table("role_permissions as up")
+                ->where("role", "=", $authUser->role_id)
                 ->where("permission", $permission)
-                ->join("user_permission_subs as ups", function ($join) use ($subPermission, &$column) {
-                    return $join->on('ups.user_permission_id', '=', 'up.id')
+                ->join("role_permission_subs as ups", function ($join) use ($subPermission, &$column) {
+                    return $join->on('ups.role_permission_id', '=', 'up.id')
                         ->where('ups.sub_permission_id', $subPermission)
                         ->where("ups." . $column, true);
                 })->select("ups.id")->first();

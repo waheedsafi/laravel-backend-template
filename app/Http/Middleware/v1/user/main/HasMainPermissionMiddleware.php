@@ -19,7 +19,7 @@ class HasMainPermissionMiddleware
         $authUser = $request->user();
         if ($authUser) {
             // 1. Check user has user permission
-            $permission = DB::table('user_permissions')->where("user_id", "=", $authUser->id)
+            $permission = DB::table('role_permissions')->where("role", "=", $authUser->role_id)
                 ->where("permission", '=', $permission)
                 ->where($column, true)
                 ->select('id')

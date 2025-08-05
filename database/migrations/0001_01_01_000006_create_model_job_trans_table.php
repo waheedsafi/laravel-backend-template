@@ -24,7 +24,7 @@ return new class extends Migration
                 ->onDelete('no action');
             $table->timestamps();
             $table->index(["language_name", "model_job_id"]);
-            $table->unique(['language_name', 'model_job_id']);
+            $table->unique(['language_name', 'value']);
         });
     }
 

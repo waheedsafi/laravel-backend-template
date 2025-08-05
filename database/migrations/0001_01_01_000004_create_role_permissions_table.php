@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('role_permissions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('role')->nullable();
+            $table->boolean('edit');
+            $table->boolean('delete');
+            $table->boolean('add');
+            $table->boolean('view');
+            $table->boolean("visible")->default(true);
+            $table->unsignedBigInteger('role');
             $table->foreign('role')->references('id')->on('roles')
                 ->onUpdate('cascade')
                 ->onDelete('set null');;

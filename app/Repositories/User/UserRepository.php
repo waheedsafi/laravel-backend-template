@@ -6,24 +6,24 @@ use Illuminate\Support\Facades\DB;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function userAuthFormattedPermissions($user_id)
+    public function userAuthFormattedPermissions($role_id)
     {
-        $permissions = DB::table('users as u')
-            ->where('u.id', $user_id)
-            ->join('user_permissions as up', 'u.id', '=', 'up.user_id')
+        $permissions = DB::table('roles as u')
+            ->where('u.id', $role_id)
+            ->join('role_permissions as up', 'u.id', '=', 'up.role')
             ->join('permissions as p', function ($join) {
                 $join->on('up.permission', '=', 'p.id')
                     ->where('up.view', true);
             })
-            ->leftJoin('user_permission_subs as ups', function ($join) {
-                $join->on('up.id', '=', 'ups.user_permission_id')
+            ->leftJoin('role_permission_subs as ups', function ($join) {
+                $join->on('up.id', '=', 'ups.role_permission_id')
                     ->where('ups.view', true);
             })
             ->join('sub_permissions as sp', function ($join) {
                 $join->on('ups.sub_permission_id', '=', 'sp.id');
             })
             ->select(
-                'up.id as user_permission_id',
+                'up.id as role_permission_id',
                 'p.id',
                 'p.group_by',
                 'p.name as permission',
@@ -46,7 +46,7 @@ class UserRepository implements UserRepositoryInterface
             ->get();
 
         // Transform data to match desired structure (for example, if you need nested `sub` permissions)
-        $formattedPermissions = $permissions->groupBy('user_permission_id')->map(function ($group) {
+        $formattedPermissions = $permissions->groupBy('role_permission_id')->map(function ($group) {
             $subPermissions = $group->filter(function ($item) {
                 return $item->sub_permission_id !== null; // Filter for permissions that have sub-permissions
             });
@@ -75,12 +75,13 @@ class UserRepository implements UserRepositoryInterface
             }
             // If there are no sub-permissions, remove the unwanted fields
             unset($permission->sub_permission);
+            unset($permission->sub_permission);
             unset($permission->sub_permission_id);
             unset($permission->sub_is_category);
             unset($permission->sub_add);
             unset($permission->sub_delete);
             unset($permission->sub_edit);
-            unset($permission->sub_view);
+            unset($permission->role_permission_id);
 
             return $permission;
         })->values();
