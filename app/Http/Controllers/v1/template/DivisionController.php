@@ -93,7 +93,7 @@ class DivisionController extends Controller
             $name = $request->pashto;
         }
 
-        cache()->forget($this->cacheDivision);
+        Cache::forget($this->cacheDivision);
 
         return response()->json([
             'message' => __('app_translation.success'),
@@ -125,7 +125,7 @@ class DivisionController extends Controller
         } else if ($locale == LanguageEnum::pashto->value) {
             $name = $request->pashto;
         }
-        cache()->forget($this->cacheDivision);
+        Cache::forget($this->cacheDivision);
 
         return response()->json([
             'message' => __('app_translation.success'),
@@ -139,7 +139,7 @@ class DivisionController extends Controller
     public function destroy($id)
     {
         $division = Division::find($id);
-        cache()->forget($this->cacheDivision);
+        Cache::forget($this->cacheDivision);
 
         if ($division) {
             $division->delete();

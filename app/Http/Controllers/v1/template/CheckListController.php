@@ -105,7 +105,7 @@ class CheckListController extends Controller
             "saved_by" => $authUser->username,
             "created_at" => $checklist->created_at,
         ];
-        cache()->forget($this->cacheChecklist);
+        Cache::forget($this->cacheChecklist);
         return response()->json(
             [
                 "checklist" => $tr,
@@ -173,7 +173,7 @@ class CheckListController extends Controller
         }
 
         DB::commit();
-        cache()->forget($this->cacheChecklist);
+        Cache::forget($this->cacheChecklist);
 
         $locale = App::getLocale();
         $name = $request->name_english;
@@ -200,7 +200,7 @@ class CheckListController extends Controller
     public function destroy($id)
     {
         CheckList::find($id)->delete();
-        cache()->forget($this->cacheChecklist);
+        Cache::forget($this->cacheChecklist);
 
         return response()->json(
             [
