@@ -11,33 +11,45 @@ use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Enums\Languages\LanguageEnum;
 use App\Http\Requests\v1\checklist\StoreCheckListRequest;
+use Illuminate\Support\Facades\Cache;
 
 class CheckListController extends Controller
 {
+
+    private $cacheChecklist = 'checklist_office';
+
+    public function __construct()
+    {
+        $this->cacheChecklist = 'checklist_office_';
+    }
     public function index()
     {
         $locale = App::getLocale();
-        $tr = DB::table('check_lists as cl')
-            ->join('users as u', 'u.id', '=', 'cl.user_id')
-            ->join('check_list_trans as clt', 'clt.check_list_id', '=', 'cl.id')
-            ->where('clt.language_name', $locale)
-            ->join('check_list_types as cltt', 'cltt.id', '=', 'cl.check_list_type_id')
-            ->join('check_list_type_trans as clttt', 'clttt.check_list_type_id', '=', 'cltt.id')
-            ->where('clttt.language_name', $locale)
-            ->select(
-                'clt.value as name',
-                'cl.id',
-                'cl.acceptable_mimes',
-                'cl.acceptable_extensions',
-                'cl.description',
-                'cl.active',
-                'clttt.value as type',
-                'cltt.id as type_id',
-                'u.username as saved_by',
-                'cl.created_at'
-            )
-            ->orderBy('cltt.id')
-            ->get();
+
+        $tr =  Cache::remember($this->cacheChecklist, 1800, function () use ($locale) {
+
+            return  DB::table('check_lists as cl')
+                ->join('users as u', 'u.id', '=', 'cl.user_id')
+                ->join('check_list_trans as clt', 'clt.check_list_id', '=', 'cl.id')
+                ->where('clt.language_name', $locale)
+                ->join('check_list_types as cltt', 'cltt.id', '=', 'cl.check_list_type_id')
+                ->join('check_list_type_trans as clttt', 'clttt.check_list_type_id', '=', 'cltt.id')
+                ->where('clttt.language_name', $locale)
+                ->select(
+                    'clt.value as name',
+                    'cl.id',
+                    'cl.acceptable_mimes',
+                    'cl.acceptable_extensions',
+                    'cl.description',
+                    'cl.active',
+                    'clttt.value as type',
+                    'cltt.id as type_id',
+                    'u.username as saved_by',
+                    'cl.created_at'
+                )
+                ->orderBy('cltt.id')
+                ->get();
+        });
 
         return response()->json(
             $tr,
@@ -93,6 +105,7 @@ class CheckListController extends Controller
             "saved_by" => $authUser->username,
             "created_at" => $checklist->created_at,
         ];
+        Cache::forget($this->cacheChecklist);
         return response()->json(
             [
                 "checklist" => $tr,
@@ -160,6 +173,8 @@ class CheckListController extends Controller
         }
 
         DB::commit();
+        Cache::forget($this->cacheChecklist);
+
         $locale = App::getLocale();
         $name = $request->name_english;
         if ($locale == LanguageEnum::farsi->value) {
@@ -185,6 +200,8 @@ class CheckListController extends Controller
     public function destroy($id)
     {
         CheckList::find($id)->delete();
+        Cache::forget($this->cacheChecklist);
+
         return response()->json(
             [
                 'message' => __('app_translation.success'),

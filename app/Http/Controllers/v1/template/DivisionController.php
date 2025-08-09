@@ -10,18 +10,30 @@ use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Enums\Languages\LanguageEnum;
 use App\Http\Requests\v1\division\DivisionStoreRequest;
+use Illuminate\Support\Facades\Cache;
 
 class DivisionController extends Controller
 {
+
+    private $cacheDivision = 'division_list';
+
+    public function __construct()
+    {
+        $this->cacheDivision = 'division_list';
+    }
     public function index()
     {
         $locale = App::getLocale();
-        $tr = DB::table('divisions as d')
-            ->join('division_trans as dt', function ($join) use ($locale) {
-                $join->on('dt.division_id', '=', 'd.id')
-                    ->where('dt.language_name', $locale);
-            })
-            ->select('d.id', "dt.value as name", 'd.created_at')->get();
+
+        $tr =  Cache::remember($this->cacheDivision, 1800, function () use ($locale) {
+
+            return  DB::table('divisions as d')
+                ->join('division_trans as dt', function ($join) use ($locale) {
+                    $join->on('dt.division_id', '=', 'd.id')
+                        ->where('dt.language_name', $locale);
+                })
+                ->select('d.id', "dt.value as name", 'd.created_at')->get();
+        });
         return response()->json($tr, 200, [], JSON_UNESCAPED_UNICODE);
     }
     public function edit($id)
@@ -81,6 +93,8 @@ class DivisionController extends Controller
             $name = $request->pashto;
         }
 
+        Cache::forget($this->cacheDivision);
+
         return response()->json([
             'message' => __('app_translation.success'),
             'division' => [
@@ -111,6 +125,8 @@ class DivisionController extends Controller
         } else if ($locale == LanguageEnum::pashto->value) {
             $name = $request->pashto;
         }
+        Cache::forget($this->cacheDivision);
+
         return response()->json([
             'message' => __('app_translation.success'),
             'division' => [
@@ -123,6 +139,8 @@ class DivisionController extends Controller
     public function destroy($id)
     {
         $division = Division::find($id);
+        Cache::forget($this->cacheDivision);
+
         if ($division) {
             $division->delete();
             return response()->json([

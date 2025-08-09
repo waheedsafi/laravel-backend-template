@@ -10,18 +10,29 @@ use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Enums\Languages\LanguageEnum;
 use App\Http\Requests\v1\job\JobStoreRequest;
+use Illuminate\Support\Facades\Cache;
 
 class JobController extends Controller
 {
+    private $cacheJob = 'job_list';
+
+    public function __construct()
+    {
+        $this->cacheJob = 'job_list';
+    }
     public function index()
     {
         $locale = App::getLocale();
-        $tr = DB::table('model_jobs as mj')
-            ->join('model_job_trans as mjt', function ($join) use ($locale) {
-                $join->on('mjt.model_job_id', '=', 'mj.id')
-                    ->where('mjt.language_name', $locale);
-            })
-            ->select('mj.id', "mjt.value as name", 'mj.created_at')->get();
+
+        $tr =  Cache::remember($this->cacheJob, 1800, function () use ($locale) {
+
+            $tr = DB::table('model_jobs as mj')
+                ->join('model_job_trans as mjt', function ($join) use ($locale) {
+                    $join->on('mjt.model_job_id', '=', 'mj.id')
+                        ->where('mjt.language_name', $locale);
+                })
+                ->select('mj.id', "mjt.value as name", 'mj.created_at')->get();
+        });
         return response()->json($tr, 200, [], JSON_UNESCAPED_UNICODE);
     }
     public function store(JobStoreRequest $request)
@@ -45,6 +56,8 @@ class JobController extends Controller
         } else if ($locale == LanguageEnum::pashto->value) {
             $name = $request->pashto;
         }
+        // Clear cache
+        Cache::forget($this->cacheJob);
         return response()->json([
             'message' => __('app_translation.success'),
             'job' => [
@@ -57,6 +70,8 @@ class JobController extends Controller
     public function destroy($id)
     {
         $job = ModelJob::find($id);
+        Cache::forget($this->cacheJob);
+
         if ($job) {
             $job->delete();
             return response()->json([
@@ -123,6 +138,7 @@ class JobController extends Controller
         } else if ($locale == LanguageEnum::pashto->value) {
             $name = $request->pashto;
         }
+        Cache::forget($this->cacheJob);
 
         return response()->json([
             'message' => __('app_translation.success'),
