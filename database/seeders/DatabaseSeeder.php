@@ -56,6 +56,8 @@ class DatabaseSeeder extends Seeder
         $this->call(FaqSeeder::class);
         $this->call(CheckListSeeder::class);
         $this->call(AboutSeeder::class);
+        $this->call(ApprovalSeeder::class);
+        $this->call(NotifierSeeder::class);
     }
     public function languages(): void
     {

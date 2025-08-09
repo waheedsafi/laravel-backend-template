@@ -253,6 +253,7 @@ return [
     'browser' => 'Browser',
     'device' => 'Device',
     'event' => 'Event',
+    "ministry_emp_portal" => "Ministry Employee Login Page",
     'application' => 'application',
     'published_books' => 'Published Books',
     'published_books_des' => 'Comprehensive library of books',

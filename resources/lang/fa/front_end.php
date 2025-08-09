@@ -253,6 +253,7 @@ return [
     'browser' => 'مرورگر',
     'device' => 'دستگاه',
     'event' => 'رویداد',
+    "ministry_emp_portal" => "صفحه ورود کارمندان وزارت",
     'application' => 'application',
     'published_books' => 'کتاب‌های منتشر شده',
     'published_books_des' => 'کتابخانه جامع کتاب‌ها',
