@@ -10,6 +10,7 @@ use App\Models\UserStatus;
 use App\Models\ModelJobTrans;
 use Illuminate\Database\Seeder;
 use App\Enums\Statuses\StatusEnum;
+use Illuminate\Support\Facades\DB;
 use App\Enums\Permissions\RoleEnum;
 use Illuminate\Support\Facades\Hash;
 use App\Enums\Languages\LanguageEnum;
@@ -98,5 +99,7 @@ class JobAndUserSeeder extends Seeder
             "is_active" => true,
             "status_id" => StatusEnum::active->value,
         ]);
+        // ✅ Reset sequence to avoid future conflicts
+        DB::statement("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))");
     }
 }

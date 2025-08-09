@@ -22,7 +22,11 @@ return new class extends Migration
             $table->foreign('status_id')->references('id')->on('statuses')
                 ->onUpdate('cascade')
                 ->onDelete('no action');
-            $table->boolean('comment')->nullable();
+            $table->text('comment')->nullable();
+            $table->unsignedBigInteger('saved_by')->nullable();
+            $table->foreign('saved_by')->references('id')->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('no action');
             $table->timestamps();
         });
     }

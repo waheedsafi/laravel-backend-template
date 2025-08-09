@@ -15,6 +15,7 @@ Route::prefix('v1')->middleware(["authorized:" . 'user:api', 'allowSuperOnly'])-
     Route::delete('/roles/{id}', [RoleController::class, "destroy"])->middleware(["userHasSubPermission:" . PermissionEnum::configurations->value . "," . SubPermissionEnum::configurations_role->value . ',' . 'view']);
     Route::post('/roles', [RoleController::class, "store"])->middleware(["userHasSubPermission:" . PermissionEnum::configurations->value . "," . SubPermissionEnum::configurations_role->value . ',' . 'add']);
     Route::put('/roles', [RoleController::class, "update"])->middleware(["userHasSubPermission:" . PermissionEnum::configurations->value . "," . SubPermissionEnum::configurations_role->value . ',' . 'edit']);
+    Route::get('/roles', [RoleController::class, "index"])->middleware(["userHasSubPermission:" . PermissionEnum::configurations->value . "," . SubPermissionEnum::configurations_role->value . ',' . 'view']);
 });
 Route::prefix('v1')->middleware(["authorized:" . 'user:api'])->group(function () {
     Route::get('roles/by/user', [RoleController::class, 'indexByUser']);

@@ -32,6 +32,17 @@ class UserAuthController extends Controller
         $locale = App::getLocale();
         $user = $request->user();
 
+        $userStatus = DB::table('user_statuses as us')
+            ->where("us.user_id", $user->id)
+            ->where('is_active', true)
+            ->select('us.status_id')
+            ->first();
+        if ($userStatus->status_id == StatusEnum::block->value) {
+            return response()->json([
+                'message' => __('app_translation.account_is_block'),
+            ], 401, [], JSON_UNESCAPED_UNICODE);
+        }
+
         $user = DB::table('users as u')
             ->where('u.id', $user->id)
             ->join('model_job_trans as mjt', function ($join) use ($locale) {
@@ -43,6 +54,10 @@ class UserAuthController extends Controller
             ->join('role_trans as rt', function ($join) use ($locale) {
                 $join->on('rt.role_id', '=', 'u.role_id')
                     ->where('rt.language_name', $locale);
+            })
+            ->join('division_trans as dt', function ($join) use ($locale) {
+                $join->on('u.division_id', '=', 'dt.division_id')
+                    ->where('dt.language_name', $locale);
             })
             ->select(
                 'u.id',
@@ -56,6 +71,7 @@ class UserAuthController extends Controller
                 "mjt.value as job",
                 "e.value as email",
                 "u.created_at",
+                "dt.value as division",
             )
             ->first();
 
@@ -71,6 +87,7 @@ class UserAuthController extends Controller
                     'contact' => $user->contact,
                     "job" => $user->job,
                     "created_at" => $user->created_at,
+                    "division" => $user->division,
                 ],
                 "permissions" => $this->userRepository->userAuthFormattedPermissions($user->role_id),
             ],
@@ -96,8 +113,10 @@ class UserAuthController extends Controller
         if ($loggedIn) {
             // Get the auth user
             $user = $loggedIn['user'];
-            $userStatus = UserStatus::where("user_id", $user->id)
+            $userStatus = DB::table('user_statuses as us')
+                ->where("us.user_id", $user->id)
                 ->where('is_active', true)
+                ->select('us.status_id')
                 ->first();
             if ($userStatus->status_id == StatusEnum::block->value) {
                 return response()->json([
@@ -115,6 +134,9 @@ class UserAuthController extends Controller
                 ->join('role_trans as rt', function ($join) use ($locale) {
                     $join->on('rt.role_id', '=', 'u.role_id')
                         ->where('rt.language_name', $locale);
+                })->join('division_trans as dt', function ($join) use ($locale) {
+                    $join->on('u.division_id', '=', 'dt.division_id')
+                        ->where('dt.language_name', $locale);
                 })
                 ->select(
                     'u.id',
@@ -127,6 +149,7 @@ class UserAuthController extends Controller
                     'rt.role_id',
                     "mjt.value as job",
                     "u.created_at",
+                    "dt.value as division",
                 )
                 ->first();
 
@@ -156,6 +179,8 @@ class UserAuthController extends Controller
                         'contact' => $user->contact,
                         "job" => $user->job,
                         "created_at" => $user->created_at,
+                        "division" => $user->division,
+
                     ],
                 ],
                 200,
@@ -164,7 +189,7 @@ class UserAuthController extends Controller
             )->cookie($cookie);
         } else {
             return response()->json([
-                'message' => __('app_translation.user_not_found')
+                'message' => __('app_translation.invalid_user_or_pass')
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
     }

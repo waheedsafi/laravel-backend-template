@@ -45,7 +45,7 @@ class RoleController extends Controller
 
         if ($authUser->role_id === RoleEnum::super->value) {
             $tr = DB::table('role_trans as rt')
-                ->where('rt.role_id', '!=', RoleEnum::debugger->value)
+                ->whereNotIn('rt.role_id', [RoleEnum::debugger->value, RoleEnum::super->value])
                 ->where('rt.language_name', $locale)
                 ->select('rt.role_id as id', "rt.value as name", 'rt.created_at')->get();
         } else {
@@ -393,6 +393,10 @@ class RoleController extends Controller
                 }
             }
             foreach ($san['sub'] as $subPermission) {
+                if ($subPermission['id'] === SubPermissionEnum::configurations_role->value) {
+                    $denied[] = [__("app_translation.unauthorized_to_set")];
+                    continue;
+                }
                 $actualSub = $actualPermissions->firstWhere('sub_permission_id', $subPermission['id']);
                 $subPermissionTrans = __("front_end." . $actualSub->name);
 

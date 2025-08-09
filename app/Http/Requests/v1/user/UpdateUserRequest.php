@@ -27,11 +27,9 @@ class UpdateUserRequest extends FormRequest
             "username" => ['required', "string", "min:3", "max:45"],
             "email" => ["required", "email"],
             "contact" => ["required"],
-            "role" => ["required", "string"],
-            "job" => ["required", "string"],
-            "destination" => ["required", "string"],
-            "status" => ["required"],
-            "grant" => ["string", "required"],
+            "role" => ["required"],
+            "job" => ["required"],
+            "division" => ["required"],
         ];
     }
 }

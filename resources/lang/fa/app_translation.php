@@ -16,5 +16,9 @@ return [
     'unauthorized' => 'غیرمجاز',
     'role_not_found' => 'نقش پیدا نشد!',
     'duplicate_english' => 'ترجمه تکراری انگلیسی مجاز نیست.',
-    'select_item' => 'یک مورد را انتخاب کنید'
+    'select_item' => 'یک مورد را انتخاب کنید',
+    'invalid_user_or_pass' => 'ایمیل یا رمز عبور نادرست است. لطفا دوباره امتحان کنید.',
+    'unauthorized_to_set' => 'شما مجاز به اعطای نقش به دیگران نیستید.',
+    'account_is_block' => 'حساب کاربری قفل است.'
+
 ];

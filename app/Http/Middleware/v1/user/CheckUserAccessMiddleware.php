@@ -23,7 +23,10 @@ class CheckUserAccessMiddleware
         $role_id = $user->role_id;
 
         // 1. It is super user do not allow access
-        if ($role_id == RoleEnum::super->value || $request->user()->id == $userId) {
+        if (
+            $role_id == RoleEnum::super->value || $request->user()->id == $userId
+            || $role_id == RoleEnum::debugger->value
+        ) {
             return response()->json([
                 'message' => __('app_translation.unauthorized'),
             ], 403, [], JSON_UNESCAPED_UNICODE);
