@@ -7,11 +7,11 @@ enum SubPermissionEnum: int
     // User
     case user_information = 1;
     case user_password = 2;
-    case user_permission = 3;
+    case user_account_status = 3;
     public const USERS = [
         1 => ['label' => "account_information", 'is_category' => false],
         2 => ['label' => "account_password", 'is_category' => false],
-        3 => ['label' => "account_permissions", 'is_category' => false],
+        3 => ['label' => "account_status", 'is_category' => false],
     ];
 
         // Configurations
@@ -34,10 +34,8 @@ enum SubPermissionEnum: int
 
         // Activity
     case activity_user_activity = 71;
-    case activity_password_activity = 72;
     public const ACTIVITY = [
-        71 => ['label' => "user_activity", 'is_category' => false],
-        72 => ['label' => "password_activity", 'is_category' => false],
+        71 => ['label' => "user_activity", 'is_category' => true],
     ];
 
         // About

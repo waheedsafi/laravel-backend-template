@@ -15,5 +15,8 @@ return [
     'unauthorized' => 'Unauthorized',
     'role_not_found' => 'Role not found!',
     'duplicate_english' => 'Duplicate English translation not allowed.',
-    'select_item' => 'Select a item'
+    'select_item' => 'Select a item',
+    'invalid_user_or_pass' => 'Invalid email or password. Please try again.',
+    'unauthorized_to_set' => 'You are unauthorized to grant role permission to others.',
+    'account_is_block' => 'Account is lock.'
 ];

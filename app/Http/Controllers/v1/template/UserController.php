@@ -8,9 +8,9 @@ use App\Models\Contact;
 use App\Traits\FilterTrait;
 use Illuminate\Http\Request;
 use App\Traits\FileHelperTrait;
+use App\Enums\Statuses\StatusEnum;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Permissions\RoleEnum;
-use App\Enums\Statuses\StatusEnum;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -19,6 +19,7 @@ use App\Http\Requests\v1\user\UpdateUserRequest;
 use App\Http\Requests\v1\user\UserRegisterRequest;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Http\Requests\v1\user\UpdateUserPasswordRequest;
+use App\Models\UserStatus;
 
 class UserController extends Controller
 {
@@ -32,7 +33,7 @@ class UserController extends Controller
         $this->cacheName = 'user_statistics';
         $this->userRepository = $userRepository;
     }
-    public function users(Request $request)
+    public function index(Request $request)
     {
         $locale = App::getLocale();
         $tr = [];
@@ -41,7 +42,6 @@ class UserController extends Controller
 
         // Start building the query
         $query = DB::table('users as u')
-            ->where('u.role_id', '!=', RoleEnum::debugger->value)
             ->leftJoin('contacts as c', 'c.id', '=', 'u.contact_id')
             ->join('emails as e', 'e.id', '=', 'u.email_id')
             ->join('roles as r', 'r.id', '=', 'u.role_id')
@@ -66,7 +66,7 @@ class UserController extends Controller
                 "u.created_at",
                 "e.value AS email",
                 "c.value AS contact",
-                "mjt.value as job"
+                "mjt.value as job",
             );
 
         $this->applyDate($query, $request, 'u.created_at', 'u.created_at');
@@ -93,7 +93,7 @@ class UserController extends Controller
             JSON_UNESCAPED_UNICODE
         );
     }
-    public function user($id)
+    public function edit($id)
     {
         $locale = App::getLocale();
 
@@ -105,7 +105,14 @@ class UserController extends Controller
             })
             ->leftJoin('contacts as c', 'c.id', '=', 'u.contact_id')
             ->join('emails as e', 'e.id', '=', 'u.email_id')
-            ->join('roles as r', 'r.id', '=', 'u.role_id')
+            ->join('role_trans as rt', function ($join) use ($locale) {
+                $join->on('rt.role_id', '=', 'u.role_id')
+                    ->where('rt.language_name', $locale);
+            })
+            ->join('division_trans as dt', function ($join) use ($locale) {
+                $join->on('dt.division_id', '=', 'u.division_id')
+                    ->where('dt.language_name', $locale);
+            })
             ->select(
                 'u.id',
                 "u.profile",
@@ -114,11 +121,13 @@ class UserController extends Controller
                 'c.value as contact',
                 'u.contact_id',
                 'e.value as email',
-                'r.name as role_name',
+                'rt.value as role_name',
                 'u.role_id',
                 "mjt.value as job",
                 "u.created_at",
-                "u.job_id"
+                "u.job_id",
+                "dt.value as division",
+                "dt.division_id",
             )
             ->first();
         if (!$user) {
@@ -139,6 +148,7 @@ class UserController extends Controller
                     'contact' => $user->contact,
                     "job" => ["id" => $user->job_id, "name" => $user->job],
                     "created_at" => $user->created_at,
+                    "division" => ['id' => $user->division_id, 'name' => $user->division]
                 ],
             ],
             200,
@@ -187,9 +197,20 @@ class UserController extends Controller
             "password" => Hash::make($request->password),
             "role_id" => $request->role,
             "job_id" => $request->job_id,
+            "division_id" => $request->division_id,
             "contact_id" => $contact ? $contact->id : $contact,
             "profile" => null,
         ]);
+        UserStatus::create([
+            "user_id" => $newUser->id,
+            "saved_by" => $request->user()->id,
+            "is_active" => true,
+            "status_id" => StatusEnum::active->value,
+        ]);
+        $trans = DB::table('status_trans as st')
+            ->where('st.id', StatusEnum::active->value)
+            ->select('st.name')
+            ->first();
         DB::commit();
         Cache::forget($this->cacheName);
         return response()->json([
@@ -199,12 +220,13 @@ class UserController extends Controller
                 'email' => $request->email,
                 "profile" => $newUser->profile,
                 "job" => $request->job,
+                "status" => $trans?->name ?? 'Unknown',
                 "created_at" => $newUser->created_at,
             ],
             'message' => __('app_translation.success'),
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
-    public function updateInformation(UpdateUserRequest $request)
+    public function update(UpdateUserRequest $request)
     {
         $request->validated();
         // 1. User is passed from middleware
@@ -294,48 +316,6 @@ class UserController extends Controller
             ], 400, [], JSON_UNESCAPED_UNICODE);
         }
     }
-    public function updateProfilePicture(Request $request)
-    {
-        $request->validate([
-            'profile' => 'nullable|mimes:jpeg,png,jpg|max:2048',
-            'id' => 'required',
-        ]);
-        $user = User::find($request->id);
-        if (!$user) {
-            return response()->json([
-                'message' => __('app_translation.user_not_found'),
-            ], 404, [], JSON_UNESCAPED_UNICODE);
-        }
-        $path = $this->storeProfile($request, $user->id);
-        if ($path != null) {
-            // 1. delete old profile
-            $this->deleteDocument($this->transformToPrivate($user->profile));
-            // 2. Update the profile
-            $user->profile = $path;
-        }
-        $user->save();
-        return response()->json([
-            'message' => __('app_translation.profile_changed'),
-            "profile" => $user->profile
-        ], 200, [], JSON_UNESCAPED_UNICODE);
-    }
-    public function deleteProfilePicture($id)
-    {
-        $user = User::find($id);
-        if (!$user) {
-            return response()->json([
-                'message' => __('app_translation.user_not_found'),
-            ], 404, [], JSON_UNESCAPED_UNICODE);
-        }
-        // 1. delete old profile
-        $this->deleteDocument($this->transformToPrivate($user->profile));
-        // 2. Update the profile
-        $user->profile = null;
-        $user->save();
-        return response()->json([
-            'message' => __('app_translation.success')
-        ], 200, [], JSON_UNESCAPED_UNICODE);
-    }
     public function changePassword(UpdateUserPasswordRequest $request)
     {
         $request->validated();
@@ -367,31 +347,34 @@ class UserController extends Controller
     {
         $active = StatusEnum::active->value;
         $block = StatusEnum::block->value;
-        $statistics = Cache::remember($this->cacheName, 300, function () use (&$active, &$block) {
+
+        $statistics = Cache::remember($this->cacheName, 180, function () use ($active, $block) {
             return DB::select("
-        SELECT
-            COUNT(*) AS userCount,
-            (SELECT COUNT(*) FROM users WHERE DATE(created_at) = CURRENT_DATE) AS todayCount,
-            (
-                SELECT COUNT(*) 
-                FROM users u 
-                INNER JOIN user_statuses us ON us.user_id = u.id
-                WHERE us.status_id = {$active}
-            ) AS activeUserCount,
-            (
-                SELECT COUNT(*) 
-                FROM users u 
-                INNER JOIN user_statuses us ON us.user_id = u.id
-                WHERE us.status_id = {$block}
-            ) AS inActiveUserCount
-         ");
+            SELECT
+                COUNT(u.id) AS userCount,
+                (SELECT COUNT(*) FROM users WHERE DATE(created_at) = CURRENT_DATE) AS todayCount,
+                (
+                    SELECT COUNT(*)
+                    FROM users u2
+                    INNER JOIN user_statuses us ON us.user_id = u2.id
+                    WHERE us.status_id = ?
+                ) AS activeUserCount,
+                (
+                    SELECT COUNT(*)
+                    FROM users u3
+                    INNER JOIN user_statuses us ON us.user_id = u3.id
+                    WHERE us.status_id = ?
+                ) AS inActiveUserCount
+            FROM users u
+        ", [$active, $block]);
         });
+
         return response()->json([
             'counts' => [
                 "userCount" => $statistics[0]->usercount,
                 "todayCount" => $statistics[0]->todaycount,
                 "activeUserCount" => $statistics[0]->activeusercount,
-                "inActiveUserCount" => $statistics[0]->inactiveusercount
+                "inActiveUserCount" => $statistics[0]->inactiveusercount,
             ],
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }

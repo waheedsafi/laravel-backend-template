@@ -12,3 +12,6 @@ use App\Http\Controllers\v1\template\MediaController;
 Route::prefix('v1')->group(function () {
     Route::get('/media/public', [MediaController::class, "publicFile"]);
 });
+Route::prefix('v1')->middleware(["authorized:" . 'user:api'])->group(function () {
+    Route::get('/media/profile', [MediaController::class, "profileFile"]);
+});

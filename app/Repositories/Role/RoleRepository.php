@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Role;
 
+use App\Enums\Permissions\SubPermissionEnum;
 use Illuminate\Support\Facades\DB;
 
 class RoleRepository implements RoleRepositoryInterface
@@ -13,6 +14,7 @@ class RoleRepository implements RoleRepositoryInterface
             ->join('permissions as p', 'rp.permission', '=', 'p.id')
             ->leftJoin('role_permission_subs as rps', 'rps.role_permission_id', '=', 'rp.id')
             ->leftJoin('sub_permissions as sp', 'rps.sub_permission_id', '=', 'sp.id')
+            ->where('sp.id', '!=', SubPermissionEnum::configurations_role->value) // Do not allow this only super can have
             ->select(
                 'p.id',
                 'p.name as permission',

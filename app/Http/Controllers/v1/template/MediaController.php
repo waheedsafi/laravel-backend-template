@@ -22,4 +22,17 @@ class MediaController extends Controller
         }
         return response()->file($path);
     }
+    public function profileFile(Request $request)
+    {
+        $authUser = $request->user();
+        $path = $this->transformToPrivate($authUser->profile);
+
+        if (!file_exists($path)) {
+            return response()->json([
+                'message' => __('app_translation.file_not_found'),
+                'path' => $path,
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->file($path);
+    }
 }
