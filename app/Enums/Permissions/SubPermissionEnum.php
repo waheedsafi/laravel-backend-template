@@ -19,11 +19,13 @@ enum SubPermissionEnum: int
     case configurations_checklist = 32;
     case configurations_division = 33;
     case configurations_role = 34;
+    case configurations_application = 35;
     public const CONFIGURATIONS = [
         31 => ['label' => "job", 'is_category' => true],
         32 => ['label' => "checklist", 'is_category' => true],
         33 => ['label' => "division", 'is_category' => true],
         34 => ['label' => "role", 'is_category' => true],
+        35 => ['label' => "application", 'is_category' => true],
     ];
 
         // Approval

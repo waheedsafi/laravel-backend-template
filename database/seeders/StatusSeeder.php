@@ -69,5 +69,26 @@ class StatusSeeder extends Seeder
             'language_name' => 'ps',
             'name' => 'مسدود'
         ]);
+        $statustype =  Status::create([
+            'id' => StatusEnum::pending,
+            'status_type_id' => StatusTypeEnum::blocking,
+        ]);
+        DB::table('status_trans')->insert([
+            'status_id' => $statustype->id,
+            'language_name' => 'en',
+            'name' => 'Pending'
+
+        ]);
+        DB::table('status_trans')->insert([
+            'status_id' => $statustype->id,
+            'language_name' => 'fa',
+            'name' => 'در حال بررسی'
+
+        ]);
+        DB::table('status_trans')->insert([
+            'status_id' => $statustype->id,
+            'language_name' => 'ps',
+            'name' => 'په تمه'
+        ]);
     }
 }

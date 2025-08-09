@@ -4,13 +4,22 @@ namespace App\Http\Controllers\v1\template;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Cache;
 
 class ApplicationController extends Controller
 {
+    private $cacheName;
+
+    public function __construct()
+    {
+        $this->cacheName = 'application_details';
+    }
+
     public function changeLocale($locale)
     {
         // Set the language in a cookie
@@ -59,5 +68,31 @@ class ApplicationController extends Controller
         $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5173');
 
         return $response;
+    }
+
+    public function applications()
+    {
+        $locale = App::getLocale();
+        $query  = Cache::remember($this->cacheName, 1800, function () use ($locale) {
+            return DB::table('applications as app')
+                ->join('application_trans as appt', function ($join) use ($locale) {
+                    $join->on('appt.application_id', '=', 'app.id')
+                        ->where('appt.language_name', '=', $locale);
+                })
+                ->select(
+                    'app.id',
+                    'app.cast_to',
+                    'app.value',
+                    'appt.description',
+                    'appt.value as name',
+                )
+                ->get();
+        });
+        return response()->json(
+            $query,
+            200,
+            [],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 }
