@@ -359,71 +359,71 @@ class TestingController extends Controller
             [
                 'en' => [
                     'title' => 'Empowerment',
-                    'description' => 'Enriching lives through easy access to knowledge and stories.',
+                    'description' => 'Building capacity and enabling communities to improve health.',
                 ],
                 'fa' => [
                     'title' => 'توانمندسازی',
-                    'description' => 'غنی‌سازی زندگی‌ها از طریق دسترسی آسان به دانش و داستان‌ها.',
+                    'description' => 'ایجاد ظرفیت و توانمندسازی جوامع برای بهبود سلامت.'
                 ],
                 'ps' => [
                     'title' => 'توانمندسازي',
-                    'description' => 'د پوهې او کیسو ته د اسانه لاسرسي له لارې ژوندونه بډای کړئ.',
+                    'description' => 'ظرفیت جوړول او ټولنو ته د روغتیا د ښه کولو زمینه برابرول.',
                 ],
             ],
             [
                 'en' => [
                     'title' => 'Innovation',
-                    'description' => 'Redefining how books are discovered and enjoyed.',
+                    'description' => 'Advancing health systems with modern technology and solutions.',
                 ],
                 'fa' => [
                     'title' => 'نوآوری',
-                    'description' => 'تعریف مجدد نحوه کشف و لذت بردن از کتاب‌ها.',
+                    'description' => 'ارتقای سیستم‌های بهداشتی با تکنولوژی‌های مدرن و راهکارهای نوین',
                 ],
                 'ps' => [
                     'title' => 'نوښت',
-                    'description' => 'هغه طریقه بیا تعریف کړئ چې کتابونه څنګه کشف او خوند ترې اخیستل کیږي.',
+                    'description' => 'د روغتیايي سیستمونو پرمختګ د عصري ټکنالوژۍ او نوښتونو په کارولو سره',
                 ],
             ],
             [
                 'en' => [
                     'title' => 'Inclusivity',
-                    'description' => 'Creating a space where everyone can connect with the power of reading.',
+                    'description' => 'Creating an environment where everyone benefits from better health.',
                 ],
                 'fa' => [
                     'title' => 'شمولیت',
-                    'description' => 'ایجاد فضایی که همه بتوانند با قدرت خواندن ارتباط برقرار کنند.',
+                    'description' => 'ایجاد محیطی که همه از سلامت بهتر بهره‌مند شوند.',
                 ],
                 'ps' => [
                     'title' => 'شمولیت',
-                    'description' => 'یو ځای رامنځته کول چیرې چې هرڅوک د لوستلو ځواک سره وصل شي.',
+                    'description' => 'یو داسې چاپیریال رامنځته کول چې هرڅوک له ښه روغتیا څخه ګټه واخلي',
                 ],
             ],
             [
                 'en' => [
                     'title' => 'Integrity',
-                    'description' => 'Delivering quality and trust in every interaction.',
+                    'description' => 'Ensuring openness and accountability in all our efforts.',
                 ],
                 'fa' => [
                     'title' => 'صداقت',
-                    'description' => 'ارائه کیفیت و اعتماد در هر تعامل.',
+                    'description' => 'اطمینان از شفافیت و پاسخگویی در تمام تلاش‌های ما',
                 ],
                 'ps' => [
                     'title' => 'صداقت',
-                    'description' => 'په هر تعامل کې کیفیت او باور وړاندې کول.',
+                    'description' => 'په خپلو ټولو هڅو کې د روڼتیا او حساب ورکونې ډاډ ورکول',
                 ],
             ],
             [
                 'en' => [
                     'title' => 'Passion',
-                    'description' => 'Inspiring a love for learning and imagination in all we do.',
+                    'description' => 'Driven by dedication to better health for all Afghans..',
                 ],
                 'fa' => [
                     'title' => 'شور و اشتیاق',
-                    'description' => 'الهام‌بخش عشق به یادگیری و تخیل در تمام کارهای ما.',
+                    'description' => 'متعلق به تعهد برای بهداشت بهتر برای همه افغان‌ها',
                 ],
                 'ps' => [
                     'title' => 'تنده',
-                    'description' => 'په ټولو کارونو کې د زده کړې او خیال مینه هڅول.',
+                    'description' => 'د ټولو افغانانو لپاره د ښه روغتیا په لاره ژمنتیا',
                 ],
             ],
         ];
@@ -431,13 +431,13 @@ class TestingController extends Controller
         $our_mission = [
             [
                 'en' => [
-                    'description' => 'To revolutionize the way people access books, empowering minds and nurturing a lifelong passion for learning through innovation and simplicity.',
+                    'description' => 'The Directorate of International Relations, Aid Coordination, and Integration is a key department within the Ministry of Public Health that manages Global Fund aid, co-financing projects, and government-funded programs. It collaborates with international organizations, NGOs, and donors, oversees diplomatic relations, and facilitates legal frameworks for foreign investments. Through its two main units—Aid Mobilization and Internal and External Health Coordination—it strengthens the health system by introducing modern technology, medicines, equipment, and skilled personnel, supports the expansion of health centers and capacity building, and actively participates in the prevention of diseases such as HIV/AIDS, tuberculosis, and malaria. This directorate plays a vital role in resource management, international cooperation, and improving the quality of health services across Afghanistan.',
                 ],
                 'fa' => [
-                    'description' => 'انقلاب در شیوه دسترسی افراد به کتاب‌ها، توانمندسازی ذهن‌ها و پرورش اشتیاق مادام‌العمر به یادگیری از طریق نوآوری و سادگی.',
+                    'description' => 'ریاست روابط بین‌المللی، هماهنگی کمک‌ها و انسجام وزارت صحت عامه، اداره‌ای مهم است که کمک‌های گلوبال فند، پروژه‌های تمویل مشترک و برنامه‌های دولت را مدیریت می‌کند. این ریاست با سازمان‌های بین‌المللی، نهادهای غیردولتی و تمویل‌کنندگان همکاری کرده، روابط دیپلوماتیک را تنظیم و چارچوب‌های قانونی سرمایه‌گذاری خارجی را فراهم می‌سازد. همچنین با دو واحد جذب کمک و هماهنگی داخلی و خارجی، سیستم صحی را با تکنالوژی نوین، دارو، تجهیزات و پرسونل متخصص تقویت می‌کند، از توسعه مراکز صحی و ارتقای ظرفیت‌ها حمایت می‌نماید و در پیشگیری از بیماری‌های واگیر چون HIV/AIDS، توبرکلوز و ملاریا مشارکت فعال دارد. این ریاست نقش کلیدی در مدیریت منابع، هماهنگی بین‌المللی و بهبود کیفیت خدمات صحی افغانستان ایفا می‌کند.',
                 ],
                 'ps' => [
-                    'description' => 'د کتابونو ته د خلکو د لاسرسي طریقه کې انقلاب راوستل، ذهنونه ځواکمن کول، او د نوښت او ساده‌ګۍ له لارې د زده کړې سره د تلپاتې لیوالتیا روزنه.',
+                    'description' => 'ریاست د نړیوالو اړیکو، مرستو همغږۍ او انسجام د عامې روغتیا وزارت یوه مهمه اداره ده چې د ګلوبل فند مرستې، ګډ تمویل او د دولت له لوري تمویل شوې پروژې اداره کوي. دغه ریاست له نړیوالو سازمانونو، غیر دولتي موسسو او تمویل کوونکو سره همکاري کوي، ديپلوماتیکې اړیکې سمبالوي او د بهرنیو پانګه والو لپاره قانوني چارې برابروي. له دوه برخو—د مرستو د جذب او د داخلي او بهرنۍ روغتیايي همغږۍ آمریتونو—سره، د روغتیا سیستم د نوې تکنالوژۍ، درملو، تجهیزاتو او متخصصو کادرونو په راوستلو سره پیاوړی کوي، د روغتیايي مرکزونو پراختیا او ظرفیت لوړولو ملاتړ کوي، او په HIV/AIDS، توبرکلوز او ملاریا ناروغیو د مخنیوي په برخه کې فعاله برخه اخلي. دغه ریاست د منابعو مدیریت، نړیوالې همکارۍ او د افغانستان د روغتیايي خدماتو په ښه کولو کې مهم رول لري',
                 ],
             ],
         ];
