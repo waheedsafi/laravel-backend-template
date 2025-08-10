@@ -73,7 +73,7 @@ class UserController extends Controller
                 "e.value AS email",
                 "c.value AS contact",
                 "mjt.value as job",
-            );
+            )->distinct();
 
         $this->applyDate($query, $request, 'u.created_at', 'u.created_at');
         $this->applyFilters($query, $request, [

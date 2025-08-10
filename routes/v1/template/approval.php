@@ -13,5 +13,5 @@ Route::prefix('v1')->middleware(["authorized:" . 'user:api'])->group(function ()
   Route::get('approvals/rejected/users', [ApprovalController::class, 'rejectedUserApproval'])->middleware(["userHasSubPermission:" . PermissionEnum::approval->value . "," . SubPermissionEnum::user_approval->value . ',' . 'view']);
   Route::get('approvals/{id}', [ApprovalController::class, 'approval'])->middleware(["userHasSubPermission:" . PermissionEnum::approval->value . "," . SubPermissionEnum::user_approval->value . ',' . 'view']);
 
-  // Route::post('approval/submit', [ApprovalController::class, 'approvalSubmit'])->middleware(["userHasSubEditPermission:" . PermissionEnum::approval->value . "," . SubPermissionEnum::pending_approval->value]);
+  Route::post('approvals', [ApprovalController::class, 'store'])->middleware(["userHasSubPermission:" . PermissionEnum::approval->value . "," . SubPermissionEnum::user_approval->value . ',' . 'edit']);
 });

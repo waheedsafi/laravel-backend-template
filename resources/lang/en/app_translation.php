@@ -22,4 +22,5 @@ return [
     'application_not_found' => 'Application not found!',
     'user_need_approval' => 'User account require approval from authorized personnel.',
     'your_account_un_app' => 'Your account is under review and approval. Please be patient.',
+    'approval_not_found' => 'Approval not found!',
 ];
