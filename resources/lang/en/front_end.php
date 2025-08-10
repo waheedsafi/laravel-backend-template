@@ -265,6 +265,7 @@ return [
     'responder_comment' => 'Responder Comment',
     'responder' => 'Responder',
     'respond_date' => 'Respond Date',
+    'req_approval' => 'Request approval',
     'applic' => 'application',
     'ngos' => 'NGOs',
     'ngos_des' => 'Registered Non-Governmental Organizations',

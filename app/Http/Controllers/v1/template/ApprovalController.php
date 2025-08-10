@@ -67,15 +67,26 @@ class ApprovalController extends Controller
         $authUser = $request->user();
         if ($approval->requester_type === User::class) {
             if ($approval->notifier_type_id == NotifierEnum::confirm_adding_user->value) {
+                DB::table('user_statuses')
+                    ->where('user_id', $approval->requester_id)
+                    ->where('is_active', true)
+                    ->limit(1)
+                    ->update(['is_active' => false]);
                 if ($request->approved) {
                     $approval->approval_type_id = ApprovalTypeEnum::approved->value;
                     UserStatus::create([
-                        "user_id" => $authUser->id,
+                        "user_id" => $approval->requester_id,
                         "saved_by" => $request->user()->id,
                         "is_active" => true,
                         "status_id" => StatusEnum::active->value,
                     ]);
                 } else {
+                    UserStatus::create([
+                        "user_id" => $approval->requester_id,
+                        "saved_by" => $request->user()->id,
+                        "is_active" => true,
+                        "status_id" => StatusEnum::rejected->value,
+                    ]);
                     $approval->approval_type_id = ApprovalTypeEnum::rejected->value;
                 }
             }
@@ -142,5 +153,51 @@ class ApprovalController extends Controller
         $approvals = $query->paginate($perPage, ['*'], 'page', $page);
 
         return response()->json($approvals, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+    public function requestForUser(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json([
+                'message' => __('app_translation.user_not_found'),
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        $userStatus = DB::table('user_statuses as us')
+            ->where("us.user_id", $user->id)
+            ->where('is_active', true)
+            ->select('us.status_id')
+            ->first();
+        DB::beginTransaction();
+
+        if (
+            $userStatus->status_id != StatusEnum::rejected->value
+        ) {
+            return response()->json([
+                'message' => __('app_translation.your_account_un_app'),
+            ], 403, [], JSON_UNESCAPED_UNICODE);
+        }
+        DB::table('user_statuses')
+            ->where('user_id', $user->id)
+            ->where('is_active', true)
+            ->limit(1)
+            ->update(['is_active' => false]);
+
+        UserStatus::create([
+            "user_id" => $user->id,
+            "saved_by" => $request->user()->id,
+            "is_active" => true,
+            "status_id" => StatusEnum::pending->value,
+        ]);
+        $this->approvalRepository->storeApproval(
+            $id,
+            User::class,
+            NotifierEnum::confirm_adding_user->value,
+            ''
+        );
+        DB::commit();
+        return response()->json([
+            'message' => __('app_translation.success'),
+            'status_id' => StatusEnum::pending->value,
+        ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 }

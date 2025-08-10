@@ -265,6 +265,7 @@ return [
     'responder_comment' => 'نظر پاسخ‌ دهنده',
     'responder' => 'پاسخ‌ دهنده',
     'respond_date' => 'تاریخ پاسخ',
+    'req_approval' => 'درخواست تأیید',
     'applic' => 'application',
     'ngos' => 'سازمان‌های غیردولتی',
     'ngos_des' => 'ثبت شده',

@@ -73,7 +73,7 @@ class UserController extends Controller
                 "e.value AS email",
                 "c.value AS contact",
                 "mjt.value as job",
-            )->distinct();
+            );
 
         $this->applyDate($query, $request, 'u.created_at', 'u.created_at');
         $this->applyFilters($query, $request, [
@@ -115,6 +115,14 @@ class UserController extends Controller
                 $join->on('rt.role_id', '=', 'u.role_id')
                     ->where('rt.language_name', $locale);
             })
+            ->join('user_statuses as us', function ($join) use ($locale) {
+                $join->on('us.user_id', '=', 'u.id')
+                    ->where('us.is_active', true);
+            })
+            ->join('status_trans as st', function ($join) use ($locale) {
+                $join->on('st.status_id', '=', 'us.status_id')
+                    ->where('st.language_name', $locale);
+            })
             ->join('division_trans as dt', function ($join) use ($locale) {
                 $join->on('dt.division_id', '=', 'u.division_id')
                     ->where('dt.language_name', $locale);
@@ -132,6 +140,8 @@ class UserController extends Controller
                 "mjt.value as job",
                 "u.created_at",
                 "u.job_id",
+                "us.status_id",
+                "st.name as status",
                 "dt.value as division",
                 "dt.division_id",
             )
@@ -149,6 +159,8 @@ class UserController extends Controller
                     "full_name" => $user->full_name,
                     "username" => $user->username,
                     'email' => $user->email,
+                    'status' => $user->status,
+                    'status_id' => $user->status_id,
                     "profile" => $user->profile,
                     "role" => ['id' => $user->role_id, 'name' => $user->role_name],
                     'contact' => $user->contact,

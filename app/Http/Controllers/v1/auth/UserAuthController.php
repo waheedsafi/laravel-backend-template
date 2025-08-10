@@ -41,7 +41,10 @@ class UserAuthController extends Controller
             return response()->json([
                 'message' => __('app_translation.account_is_block'),
             ], 401, [], JSON_UNESCAPED_UNICODE);
-        } else if ($userStatus->status_id == StatusEnum::pending->value) {
+        } else if (
+            $userStatus->status_id == StatusEnum::pending->value ||
+            $userStatus->status_id == StatusEnum::rejected->value
+        ) {
             return response()->json([
                 'message' => __('app_translation.your_account_un_app'),
             ], 403, [], JSON_UNESCAPED_UNICODE);
@@ -126,7 +129,10 @@ class UserAuthController extends Controller
                 return response()->json([
                     'message' => __('app_translation.account_is_block'),
                 ], 401, [], JSON_UNESCAPED_UNICODE);
-            } else if ($userStatus->status_id == StatusEnum::pending->value) {
+            } else if (
+                $userStatus->status_id == StatusEnum::pending->value ||
+                $userStatus->status_id == StatusEnum::rejected->value
+            ) {
                 return response()->json([
                     'message' => __('app_translation.your_account_un_app'),
                 ], 403, [], JSON_UNESCAPED_UNICODE);
