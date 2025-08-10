@@ -16,11 +16,205 @@ use Illuminate\Support\Facades\Log;
 
 class CountrySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+
+
     public function run(): void
     {
+        // Mapping country names to ISO codes
+        $countryInfo = [
+            "Saudi Arabia" => ['abbr' => 'SA', 'code' => '+966'],
+            "Afghanistan" => ['abbr' => 'AF', 'code' => '+93'],
+            "United States" => ['abbr' => 'US', 'code' => '+1'],
+            "United Kingdom" => ['abbr' => 'GB', 'code' => '+44'],
+            "Canada" => ['abbr' => 'CA', 'code' => '+1'],
+            "Germany" => ['abbr' => 'DE', 'code' => '+49'],
+            "France" => ['abbr' => 'FR', 'code' => '+33'],
+            "Italy" => ['abbr' => 'IT', 'code' => '+39'],
+            "Spain" => ['abbr' => 'ES', 'code' => '+34'],
+            "China" => ['abbr' => 'CN', 'code' => '+86'],
+            "Japan" => ['abbr' => 'JP', 'code' => '+81'],
+            "Russia" => ['abbr' => 'RU', 'code' => '+7'],
+            "Iran" => ['abbr' => 'IR', 'code' => '+98'],
+            "Pakistan" => ['abbr' => 'PK', 'code' => '+92'],
+            "Turkey" => ['abbr' => 'TR', 'code' => '+90'],
+            "Egypt" => ['abbr' => 'EG', 'code' => '+20'],
+            "Brazil" => ['abbr' => 'BR', 'code' => '+55'],
+            "Mexico" => ['abbr' => 'MX', 'code' => '+52'],
+            "Australia" => ['abbr' => 'AU', 'code' => '+61'],
+            "Argentina" => ['abbr' => 'AR', 'code' => '+54'],
+            "Bangladesh" => ['abbr' => 'BD', 'code' => '+880'],
+            "Belgium" => ['abbr' => 'BE', 'code' => '+32'],
+            "Netherlands" => ['abbr' => 'NL', 'code' => '+31'],
+            "Sweden" => ['abbr' => 'SE', 'code' => '+46'],
+            "Norway" => ['abbr' => 'NO', 'code' => '+47'],
+            "Denmark" => ['abbr' => 'DK', 'code' => '+45'],
+            "Finland" => ['abbr' => 'FI', 'code' => '+358'],
+            "Switzerland" => ['abbr' => 'CH', 'code' => '+41'],
+            "Austria" => ['abbr' => 'AT', 'code' => '+43'],
+            "Poland" => ['abbr' => 'PL', 'code' => '+48'],
+            "Portugal" => ['abbr' => 'PT', 'code' => '+351'],
+            "Greece" => ['abbr' => 'GR', 'code' => '+30'],
+            "Ukraine" => ['abbr' => 'UA', 'code' => '+380'],
+            "South Korea" => ['abbr' => 'KR', 'code' => '+82'],
+            "North Korea" => ['abbr' => 'KP', 'code' => '+850'],
+            "Thailand" => ['abbr' => 'TH', 'code' => '+66'],
+            "Vietnam" => ['abbr' => 'VN', 'code' => '+84'],
+            "Indonesia" => ['abbr' => 'ID', 'code' => '+62'],
+            "Malaysia" => ['abbr' => 'MY', 'code' => '+60'],
+            "Philippines" => ['abbr' => 'PH', 'code' => '+63'],
+            "Iraq" => ['abbr' => 'IQ', 'code' => '+964'],
+            "Syria" => ['abbr' => 'SY', 'code' => '+963'],
+            "Jordan" => ['abbr' => 'JO', 'code' => '+962'],
+            "Lebanon" => ['abbr' => 'LB', 'code' => '+961'],
+            "Qatar" => ['abbr' => 'QA', 'code' => '+974'],
+            "UAE" => ['abbr' => 'AE', 'code' => '+971'],
+            "Kuwait" => ['abbr' => 'KW', 'code' => '+965'],
+            "Oman" => ['abbr' => 'OM', 'code' => '+968'],
+            "Yemen" => ['abbr' => 'YE', 'code' => '+967'],
+            "Sudan" => ['abbr' => 'SD', 'code' => '+249'],
+            "South Africa" => ['abbr' => 'ZA', 'code' => '+27'],
+            "Kenya" => ['abbr' => 'KE', 'code' => '+254'],
+            "Nigeria" => ['abbr' => 'NG', 'code' => '+234'],
+            "Morocco" => ['abbr' => 'MA', 'code' => '+212'],
+            "Tunisia" => ['abbr' => 'TN', 'code' => '+216'],
+            "Algeria" => ['abbr' => 'DZ', 'code' => '+213'],
+            "Angola" => ['abbr' => 'AO', 'code' => '+244'],
+            "Mozambique" => ['abbr' => 'MZ', 'code' => '+258'],
+            "Zambia" => ['abbr' => 'ZM', 'code' => '+260'],
+            "Zimbabwe" => ['abbr' => 'ZW', 'code' => '+263'],
+            "Malawi" => ['abbr' => 'MW', 'code' => '+265'],
+            "Tanzania" => ['abbr' => 'TZ', 'code' => '+255'],
+            "Uganda" => ['abbr' => 'UG', 'code' => '+256'],
+            "Rwanda" => ['abbr' => 'RW', 'code' => '+250'],
+            "Burundi" => ['abbr' => 'BI', 'code' => '+257'],
+            "Ethiopia" => ['abbr' => 'ET', 'code' => '+251'],
+            "Somalia" => ['abbr' => 'SO', 'code' => '+252'],
+            "Chad" => ['abbr' => 'TD', 'code' => '+235'],
+            "Central African Republic" => ['abbr' => 'CF', 'code' => '+236'],
+            "Congo" => ['abbr' => 'CG', 'code' => '+242'],
+            "Democratic Republic of the Congo" => ['abbr' => 'CD', 'code' => '+243'],
+            "Gabon" => ['abbr' => 'GA', 'code' => '+241'],
+            "Seychelles" => ['abbr' => 'SC', 'code' => '+248'],
+            "Mauritius" => ['abbr' => 'MU', 'code' => '+230'],
+            "Madagascar" => ['abbr' => 'MG', 'code' => '+261'],
+            "Comoros" => ['abbr' => 'KM', 'code' => '+269'],
+            "Somaliland" => ['abbr' => 'SO', 'code' => '+252'],
+            "Sri Lanka" => ['abbr' => 'LK', 'code' => '+94'],
+            "Nepal" => ['abbr' => 'NP', 'code' => '+977'],
+            "Bhutan" => ['abbr' => 'BT', 'code' => '+975'],
+            "Maldives" => ['abbr' => 'MV', 'code' => '+960'],
+            "India" => ['abbr' => 'IN', 'code' => '+91'],
+            "Belarus" => ['abbr' => 'BY', 'code' => '+375'],
+            "Lithuania" => ['abbr' => 'LT', 'code' => '+370'],
+            "Latvia" => ['abbr' => 'LV', 'code' => '+371'],
+            "Estonia" => ['abbr' => 'EE', 'code' => '+372'],
+            "Moldova" => ['abbr' => 'MD', 'code' => '+373'],
+            "Armenia" => ['abbr' => 'AM', 'code' => '+374'],
+            "Georgia" => ['abbr' => 'GE', 'code' => '+995'],
+            "Azerbaijan" => ['abbr' => 'AZ', 'code' => '+994'],
+            "Kazakhstan" => ['abbr' => 'KZ', 'code' => '+7'],
+            "Kyrgyzstan" => ['abbr' => 'KG', 'code' => '+996'],
+            "Uzbekistan" => ['abbr' => 'UZ', 'code' => '+998'],
+            "Turkmenistan" => ['abbr' => 'TM', 'code' => '+993'],
+            "Tajikistan" => ['abbr' => 'TJ', 'code' => '+992'],
+            "Bulgaria" => ['abbr' => 'BG', 'code' => '+359'],
+            "Romania" => ['abbr' => 'RO', 'code' => '+40'],
+            "Croatia" => ['abbr' => 'HR', 'code' => '+385'],
+            "Slovenia" => ['abbr' => 'SI', 'code' => '+386'],
+            "Serbia" => ['abbr' => 'RS', 'code' => '+381'],
+            "Bosnia and Herzegovina" => ['abbr' => 'BA', 'code' => '+387'],
+            "Montenegro" => ['abbr' => 'ME', 'code' => '+382'],
+            "North Macedonia" => ['abbr' => 'MK', 'code' => '+389'],
+            "Albania" => ['abbr' => 'AL', 'code' => '+355'],
+            "Kosovo" => ['abbr' => 'XK', 'code' => '+383'],
+            "Malta" => ['abbr' => 'MT', 'code' => '+356'],
+            "Cyprus" => ['abbr' => 'CY', 'code' => '+357'],
+            "Israel" => ['abbr' => 'IL', 'code' => '+972'],
+            "Palestine" => ['abbr' => 'PS', 'code' => '+970'],
+            "Barbados" => ['abbr' => 'BB', 'code' => '+1-246'],
+            "Saint Lucia" => ['abbr' => 'LC', 'code' => '+1-758'],
+            "Saint Vincent and the Grenadines" => ['abbr' => 'VC', 'code' => '+1-784'],
+            "Antigua and Barbuda" => ['abbr' => 'AG', 'code' => '+1-268'],
+            "Dominica" => ['abbr' => 'DM', 'code' => '+1-767'],
+            "Grenada" => ['abbr' => 'GD', 'code' => '+1-473'],
+            "Saint Kitts and Nevis" => ['abbr' => 'KN', 'code' => '+1-869'],
+            "Jamaica" => ['abbr' => 'JM', 'code' => '+1-876'],
+            "Haiti" => ['abbr' => 'HT', 'code' => '+509'],
+            "Cuba" => ['abbr' => 'CU', 'code' => '+53'],
+            "Dominican Republic" => ['abbr' => 'DO', 'code' => '+1-809'],
+            "Puerto Rico" => ['abbr' => 'PR', 'code' => '+1-787'],
+            "Costa Rica" => ['abbr' => 'CR', 'code' => '+506'],
+            "Panama" => ['abbr' => 'PA', 'code' => '+507'],
+            "Nicaragua" => ['abbr' => 'NI', 'code' => '+505'],
+            "El Salvador" => ['abbr' => 'SV', 'code' => '+503'],
+            "Honduras" => ['abbr' => 'HN', 'code' => '+504'],
+            "Guatemala" => ['abbr' => 'GT', 'code' => '+502'],
+            "Belize" => ['abbr' => 'BZ', 'code' => '+501'],
+            "Colombia" => ['abbr' => 'CO', 'code' => '+57'],
+            "Venezuela" => ['abbr' => 'VE', 'code' => '+58'],
+            "Guyana" => ['abbr' => 'GY', 'code' => '+592'],
+            "Suriname" => ['abbr' => 'SR', 'code' => '+597'],
+            "French Guiana" => ['abbr' => 'GF', 'code' => '+594'],
+            "Luxembourg" => ['abbr' => 'LU', 'code' => '+352'],
+            "Iceland" => ['abbr' => 'IS', 'code' => '+354'],
+            "Ireland" => ['abbr' => 'IE', 'code' => '+353'],
+            "Andorra" => ['abbr' => 'AD', 'code' => '+376'],
+            "Monaco" => ['abbr' => 'MC', 'code' => '+377'],
+            "San Marino" => ['abbr' => 'SM', 'code' => '+378'],
+            "Vatican City" => ['abbr' => 'VA', 'code' => '+379'],
+            "Liechtenstein" => ['abbr' => 'LI', 'code' => '+423'],
+            "Czech Republic" => ['abbr' => 'CZ', 'code' => '+420'],
+            "Slovakia" => ['abbr' => 'SK', 'code' => '+421'],
+            "Hungary" => ['abbr' => 'HU', 'code' => '+36'],
+            "Trinidad and Tobago" => ['abbr' => 'TT', 'code' => '+1-868'],
+            "The Bahamas" => ['abbr' => 'BS', 'code' => '+1-242'],
+            "South Sudan" => ['abbr' => 'SS', 'code' => '+211'],
+            "Eritrea" => ['abbr' => 'ER', 'code' => '+291'],
+            "Djibouti" => ['abbr' => 'DJ', 'code' => '+253'],
+            "Mali" => ['abbr' => 'ML', 'code' => '+223'],
+            "Niger" => ['abbr' => 'NE', 'code' => '+227'],
+            "Burkina Faso" => ['abbr' => 'BF', 'code' => '+226'],
+            "Senegal" => ['abbr' => 'SN', 'code' => '+221'],
+            "The Gambia" => ['abbr' => 'GM', 'code' => '+220'],
+            "Guinea" => ['abbr' => 'GN', 'code' => '+224'],
+            "Guinea-Bissau" => ['abbr' => 'GW', 'code' => '+245'],
+            "Cape Verde" => ['abbr' => 'CV', 'code' => '+238'],
+            "Sao Tome and Principe" => ['abbr' => 'ST', 'code' => '+239'],
+            "Equatorial Guinea" => ['abbr' => 'GQ', 'code' => '+240'],
+            "Libya" => ['abbr' => 'LY', 'code' => '+218'],
+            "Ghana" => ['abbr' => 'GH', 'code' => '+233'],
+            "Togo" => ['abbr' => 'TG', 'code' => '+228'],
+            "Benin" => ['abbr' => 'BJ', 'code' => '+229'],
+            "Cote d'Ivoire" => ['abbr' => 'CI', 'code' => '+225'],
+            "Cameroon" => ['abbr' => 'CM', 'code' => '+237'],
+            "Lesotho" => ['abbr' => 'LS', 'code' => '+266'],
+            "Eswatini" => ['abbr' => 'SZ', 'code' => '+268'],
+            "Botswana" => ['abbr' => 'BW', 'code' => '+267'],
+            "Namibia" => ['abbr' => 'NA', 'code' => '+264'],
+            "New Zealand" => ['abbr' => 'NZ', 'code' => '+64'],
+            "Fiji" => ['abbr' => 'FJ', 'code' => '+679'],
+            "Papua New Guinea" => ['abbr' => 'PG', 'code' => '+675'],
+            "Solomon Islands" => ['abbr' => 'SB', 'code' => '+677'],
+            "Vanuatu" => ['abbr' => 'VU', 'code' => '+678'],
+            "Samoa" => ['abbr' => 'WS', 'code' => '+685'],
+            "Tonga" => ['abbr' => 'TO', 'code' => '+676'],
+            "Kiribati" => ['abbr' => 'KI', 'code' => '+686'],
+            "Marshall Islands" => ['abbr' => 'MH', 'code' => '+692'],
+            "Federated States of Micronesia" => ['abbr' => 'FM', 'code' => '+691'],
+            "Palau" => ['abbr' => 'PW', 'code' => '+680'],
+            "Nauru" => ['abbr' => 'NR', 'code' => '+674'],
+            "Tuvalu" => ['abbr' => 'TV', 'code' => '+688'],
+            "Timor-Leste" => ['abbr' => 'TL', 'code' => '+670']
+        ];
+
+        // Convert code to flag emoji
+        $toFlag = function ($abbr) {
+            return implode('', array_map(
+                fn($char) => mb_convert_encoding('&#' . (127397 + ord($char)) . ';', 'UTF-8', 'HTML-ENTITIES'),
+                str_split(strtoupper($abbr))
+            ));
+        };
+        // Your $country array stays the same (from your original file)
         $country = [
             "Saudi Arabia" => [
                 "fa" => "عربستان سعودی",
@@ -3156,44 +3350,44 @@ class CountrySeeder extends Seeder
         ];
 
         foreach ($country as $name => $translations) {
-            // Create the country record
-            $cnt = Country::factory()->create([]);
+            $abbr = $countryInfo[$name]['abbr'] ?? null;
+            $code = $countryInfo[$name]['code'] ?? null;
+            $flag = $abbr ? $toFlag($abbr) : null;
+
+            $cnt = Country::factory()->create([
+                'code' => $code,
+                'abbr' => $abbr,
+                'flag' => $flag
+            ]);
+
             CountryTrans::create([
                 'value' => $name,
                 "language_name" => "en",
                 "country_id" => $cnt->id
             ]);
 
-            // Loop through translations (e.g., fa, ps)
             foreach ($translations as $key => $value) {
-                // Check if this is the province section
                 if ($key == 'provinces') {
                     foreach ($value as $provinceName => $provinceDetails) {
-                        // Create a province for this country
                         $province = Province::factory()->create([
-                            "country_id" => $cnt->id,  // Associate province with the created country
+                            "country_id" => $cnt->id
                         ]);
                         ProvinceTrans::create([
                             'value' => $provinceName,
                             "language_name" => "en",
                             "province_id" => $province->id
                         ]);
-
-                        // Loop through the province's translations and districts
                         foreach ($provinceDetails as $provinceKey => $provinceValue) {
                             if ($provinceKey == 'District') {
                                 foreach ($provinceValue as $districtName => $districtDetails) {
-                                    // Create district for this province
                                     $district = District::factory()->create([
-                                        "province_id" => $province->id,  // Associate district with the created province
+                                        "province_id" => $province->id
                                     ]);
                                     DistrictTrans::create([
                                         'value' => $districtName,
                                         "language_name" => "en",
                                         "district_id" => $district->id
                                     ]);
-
-                                    // Translate district details (e.g., fa, ps)
                                     foreach ($districtDetails as $language => $translation) {
                                         DistrictTrans::create([
                                             'value' => $translation,
@@ -3203,7 +3397,6 @@ class CountrySeeder extends Seeder
                                     }
                                 }
                             } else {
-                                // Translate province details (e.g., fa, ps)
                                 ProvinceTrans::create([
                                     'value' => $provinceValue,
                                     "language_name" => $provinceKey,
@@ -3212,19 +3405,18 @@ class CountrySeeder extends Seeder
                             }
                         }
                     }
-                } else if ($key == 'nationality') {
+                } elseif ($key == 'nationality') {
                     $nationality = Nationality::create([
                         'country_id' => $cnt->id
                     ]);
-                    foreach ($value as $provinceName => $provinceDetails) {
+                    foreach ($value as $lang => $natValue) {
                         NationalityTrans::create([
-                            'value' => $provinceDetails,
-                            "language_name" => $provinceName,
+                            'value' => $natValue,
+                            "language_name" => $lang,
                             "nationality_id" => $nationality->id
                         ]);
                     }
                 } else {
-                    // Translate country details (e.g., fa, ps)
                     CountryTrans::create([
                         'value' => $value,
                         "language_name" => $key,
@@ -3234,4 +3426,91 @@ class CountrySeeder extends Seeder
             }
         }
     }
+
+    /**
+     * Run the database seeds.
+     */
+    // public function run(): void
+    // {
+
+
+    //     foreach ($country as $name => $translations) {
+    //         // Create the country record
+    //         $cnt = Country::factory()->create([]);
+    //         CountryTrans::create([
+    //             'value' => $name,
+    //             "language_name" => "en",
+    //             "country_id" => $cnt->id
+    //         ]);
+
+    //         // Loop through translations (e.g., fa, ps)
+    //         foreach ($translations as $key => $value) {
+    //             // Check if this is the province section
+    //             if ($key == 'provinces') {
+    //                 foreach ($value as $provinceName => $provinceDetails) {
+    //                     // Create a province for this country
+    //                     $province = Province::factory()->create([
+    //                         "country_id" => $cnt->id,  // Associate province with the created country
+    //                     ]);
+    //                     ProvinceTrans::create([
+    //                         'value' => $provinceName,
+    //                         "language_name" => "en",
+    //                         "province_id" => $province->id
+    //                     ]);
+
+    //                     // Loop through the province's translations and districts
+    //                     foreach ($provinceDetails as $provinceKey => $provinceValue) {
+    //                         if ($provinceKey == 'District') {
+    //                             foreach ($provinceValue as $districtName => $districtDetails) {
+    //                                 // Create district for this province
+    //                                 $district = District::factory()->create([
+    //                                     "province_id" => $province->id,  // Associate district with the created province
+    //                                 ]);
+    //                                 DistrictTrans::create([
+    //                                     'value' => $districtName,
+    //                                     "language_name" => "en",
+    //                                     "district_id" => $district->id
+    //                                 ]);
+
+    //                                 // Translate district details (e.g., fa, ps)
+    //                                 foreach ($districtDetails as $language => $translation) {
+    //                                     DistrictTrans::create([
+    //                                         'value' => $translation,
+    //                                         "language_name" => $language,
+    //                                         "district_id" => $district->id
+    //                                     ]);
+    //                                 }
+    //                             }
+    //                         } else {
+    //                             // Translate province details (e.g., fa, ps)
+    //                             ProvinceTrans::create([
+    //                                 'value' => $provinceValue,
+    //                                 "language_name" => $provinceKey,
+    //                                 "province_id" => $province->id
+    //                             ]);
+    //                         }
+    //                     }
+    //                 }
+    //             } else if ($key == 'nationality') {
+    //                 $nationality = Nationality::create([
+    //                     'country_id' => $cnt->id
+    //                 ]);
+    //                 foreach ($value as $provinceName => $provinceDetails) {
+    //                     NationalityTrans::create([
+    //                         'value' => $provinceDetails,
+    //                         "language_name" => $provinceName,
+    //                         "nationality_id" => $nationality->id
+    //                     ]);
+    //                 }
+    //             } else {
+    //                 // Translate country details (e.g., fa, ps)
+    //                 CountryTrans::create([
+    //                     'value' => $value,
+    //                     "language_name" => $key,
+    //                     "country_id" => $cnt->id
+    //                 ]);
+    //             }
+    //         }
+    //     }
+    // }
 }
