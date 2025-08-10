@@ -21,7 +21,16 @@ class StatusController extends Controller
             ->where('is_active', true)
             ->select('us.status_id')
             ->first();
-        if ($userStatus->status_id == StatusEnum::block->value) {
+        if ($userStatus->status_id == StatusEnum::pending->value) {
+            return response()->json(
+                [
+                    'message' => __('app_translation.user_need_approval')
+                ],
+                422,
+                [],
+                JSON_UNESCAPED_UNICODE
+            );
+        } else if ($userStatus->status_id == StatusEnum::block->value) {
             // Start building the query
             $tr = DB::table('status_trans as st')
                 ->where('st.status_id', StatusEnum::active->value)
@@ -90,7 +99,21 @@ class StatusController extends Controller
             'comment' => 'required|string',
             'status' => 'required'
         ]);
-
+        $userStatus = DB::table('user_statuses as us')
+            ->where("us.user_id", $validatedData['id'])
+            ->where('is_active', true)
+            ->select('us.status_id')
+            ->first();
+        if ($userStatus->status_id == StatusEnum::pending->value) {
+            return response()->json(
+                [
+                    'message' => __('app_translation.user_need_approval')
+                ],
+                422,
+                [],
+                JSON_UNESCAPED_UNICODE
+            );
+        }
         $authUser = $request->user();
         // Begin transaction
         DB::beginTransaction();

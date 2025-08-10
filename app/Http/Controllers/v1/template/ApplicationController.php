@@ -9,7 +9,11 @@ use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Lang;
+use App\Enums\Languages\LanguageEnum;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Requests\v1\applications\ApplicationUpdateRequest;
+use App\Models\Application;
+use App\Models\ApplicationTrans;
 
 class ApplicationController extends Controller
 {
@@ -94,5 +98,27 @@ class ApplicationController extends Controller
             [],
             JSON_UNESCAPED_UNICODE
         );
+    }
+    public function updateApplication(ApplicationUpdateRequest $request)
+    {
+        $request->validated();
+        // 1. Create
+        $application = Application::find($request->id);
+        if (!$application) {
+            return response()->json([
+                'message' => __('app_translation.application_not_found')
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        DB::beginTransaction();
+
+        $application->value = $request->value;
+        $application->save();
+        DB::commit();
+
+        Cache::forget($this->cacheName);
+
+        return response()->json([
+            'message' => __('app_translation.success'),
+        ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 }

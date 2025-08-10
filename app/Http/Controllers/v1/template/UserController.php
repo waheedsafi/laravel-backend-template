@@ -5,9 +5,12 @@ namespace App\Http\Controllers\v1\template;
 use App\Models\User;
 use App\Models\Email;
 use App\Models\Contact;
+use App\Models\UserStatus;
 use App\Traits\FilterTrait;
 use Illuminate\Http\Request;
 use App\Traits\FileHelperTrait;
+use App\Traits\ApplicationTrait;
+use App\Enums\Types\NotifierEnum;
 use App\Enums\Statuses\StatusEnum;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Permissions\RoleEnum;
@@ -19,19 +22,22 @@ use App\Http\Requests\v1\user\UpdateUserRequest;
 use App\Http\Requests\v1\user\UserRegisterRequest;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Http\Requests\v1\user\UpdateUserPasswordRequest;
-use App\Models\UserStatus;
+use App\Repositories\Approval\ApprovalRepositoryInterface;
 
 class UserController extends Controller
 {
-    use FileHelperTrait, FilterTrait;
+    use FileHelperTrait, FilterTrait, ApplicationTrait;
     private $cacheName;
     protected $userRepository;
+    protected $approvalRepository;
 
     public function __construct(
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        ApprovalRepositoryInterface $approvalRepository,
     ) {
         $this->cacheName = 'user_statistics';
         $this->userRepository = $userRepository;
+        $this->approvalRepository = $approvalRepository;
     }
     public function index(Request $request)
     {
@@ -201,16 +207,31 @@ class UserController extends Controller
             "contact_id" => $contact ? $contact->id : $contact,
             "profile" => null,
         ]);
+        // Check for approval
+        $status_id = StatusEnum::active->value;
+        if ($this->approvable()) {
+            $status_id = StatusEnum::pending->value;
+            $this->approvalRepository->storeApproval(
+                $newUser->id,
+                User::class,
+                NotifierEnum::confirm_adding_user->value,
+                $request->request_comment
+            );
+        }
+
         UserStatus::create([
             "user_id" => $newUser->id,
             "saved_by" => $request->user()->id,
             "is_active" => true,
-            "status_id" => StatusEnum::active->value,
+            "status_id" => $status_id,
         ]);
+        $locale = App::getLocale();
         $trans = DB::table('status_trans as st')
-            ->where('st.id', StatusEnum::active->value)
+            ->where('st.status_id', $status_id)
+            ->where('st.language_name', $locale)
             ->select('st.name')
             ->first();
+
         DB::commit();
         Cache::forget($this->cacheName);
         return response()->json([
@@ -320,24 +341,9 @@ class UserController extends Controller
     {
         $request->validated();
         $user = $request->get('validatedUser');
-        $authUser = $request->user();
         DB::beginTransaction();
-        if ($authUser->role_id == RoleEnum::super->value) {
-            $user->password = Hash::make($request->new_password);
-            $user->save();
-        } else {
-            $request->validate([
-                "old_password" => ["required", "min:8", "max:45"],
-            ]);
-            if (!Hash::check($request->old_password, $user->password)) {
-                return response()->json([
-                    'message' => __('app_translation.incorrect_password'),
-                ], 422, [], JSON_UNESCAPED_UNICODE);
-            } else {
-                $user->password = Hash::make($request->new_password);
-                $user->save();
-            }
-        }
+        $user->password = Hash::make($request->new_password);
+        $user->save();
         DB::commit();
         return response()->json([
             'message' => __('app_translation.success'),

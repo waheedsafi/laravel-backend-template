@@ -52,6 +52,6 @@ class RoleSeeder extends Seeder
             "role_id" => $item->id
         ]);
         // ✅ Reset sequence to avoid future conflicts
-        // DB::statement("SELECT setval('roles_id_seq', (SELECT MAX(id) FROM roles))");
+        DB::statement("SELECT setval('roles_id_seq', (SELECT MAX(id) FROM roles))");
     }
 }

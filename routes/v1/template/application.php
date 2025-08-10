@@ -2,6 +2,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Enums\Permissions\PermissionEnum;
+use App\Enums\Permissions\SubPermissionEnum;
 use App\Http\Controllers\v1\template\ApplicationController;
 
 Route::prefix('v1')->group(function () {
@@ -13,5 +15,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/genders', [ApplicationController::class, "genders"]);
     Route::get('/currencies', [ApplicationController::class, "currencies"]);
     Route::get('/fonts/{filename}', [ApplicationController::class, "fonts"]);
+
+    // Applications
     Route::get('/applications', [ApplicationController::class, "applications"]);
+    Route::put('/applications', [ApplicationController::class, "updateApplication"]);
 });

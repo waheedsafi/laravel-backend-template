@@ -25,13 +25,13 @@ class JobController extends Controller
         $locale = App::getLocale();
 
         $tr =  Cache::remember($this->cacheJob, 1800, function () use ($locale) {
-
-            $tr = DB::table('model_jobs as mj')
+            return DB::table('model_jobs as mj')
                 ->join('model_job_trans as mjt', function ($join) use ($locale) {
                     $join->on('mjt.model_job_id', '=', 'mj.id')
                         ->where('mjt.language_name', $locale);
                 })
-                ->select('mj.id', "mjt.value as name", 'mj.created_at')->get();
+                ->select('mj.id', "mjt.value as name", 'mj.created_at')
+                ->get();
         });
         return response()->json($tr, 200, [], JSON_UNESCAPED_UNICODE);
     }

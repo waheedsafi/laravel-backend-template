@@ -18,5 +18,8 @@ return [
     'select_item' => 'Select a item',
     'invalid_user_or_pass' => 'Invalid email or password. Please try again.',
     'unauthorized_to_set' => 'You are unauthorized to grant role permission to others.',
-    'account_is_block' => 'Account is lock.'
+    'account_is_block' => 'Account is lock.',
+    'application_not_found' => 'Application not found!',
+    'user_need_approval' => 'User account require approval from authorized personnel.',
+    'your_account_un_app' => 'Your account is under review and approval. Please be patient.',
 ];

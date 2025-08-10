@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Permissions\RoleEnum;
 use Illuminate\Support\Facades\App;
+use App\Enums\Types\ApplicationEnum;
 use Illuminate\Support\Facades\Hash;
 use App\Enums\Permissions\SubPermissionEnum;
 
@@ -471,75 +472,45 @@ class TestingController extends Controller
     }
     public function testing(Request $request)
     {
-        return var_dump(SubPermissionEnum::getMetaById('95'));
+        $locale = App::getLocale();
 
-
-
-        $actualPermissions = $this->rolePermissions(1);
-        $actual = $actualPermissions->firstWhere('sub_permission_id', 1);
-        return $actualPermissions;
-        return $this->formatRolePermissions($this->rolePermissions(RoleEnum::super->value));
-    }
-    public function rolePermissions($role_id)
-    {
-        return DB::table('role_permissions as rp')
-            ->where('rp.role', '=', $role_id)
-            ->join('permissions as p', 'rp.permission', '=', 'p.id')
-            ->leftJoin('role_permission_subs as rps', 'rps.role_permission_id', '=', 'rp.id')
-            ->leftJoin('sub_permissions as sp', 'rps.sub_permission_id', '=', 'sp.id')
+        return DB::table('approvals as a')
+            ->where("a.id", 1)
+            ->leftJoin('users as u', function ($join) {
+                $join->on('u.id', '=', 'a.responder_id');
+            })
+            ->join('notifier_type_trans as ntt', function ($join) use ($locale) {
+                $join->on('ntt.notifier_type_id', '=', 'a.notifier_type_id')
+                    ->where('ntt.language_name', $locale);
+            })
+            ->leftJoin('approval_documents as ad', 'ad.approval_id', '=', 'a.id')   // left join here
+            ->leftJoin('check_list_trans as ct', function ($join) use ($locale) {
+                $join->on('ct.check_list_id', '=', 'ad.check_list_id')
+                    ->where('ct.language_name', $locale);
+            })
+            ->join('users as usr', function ($join) {
+                $join->on('usr.id', '=', 'a.requester_id');
+            })
             ->select(
-                'p.id',
-                'p.name as permission',
-                'sp.name',
-                'rp.view',
-                'rp.edit',
-                'rp.delete',
-                'rp.add',
-                'p.priority',
-                "rps.sub_permission_id",
-                "rps.view as subView",
-                "rps.add as subAdd",
-                "rps.edit as subEdit",
-                "rps.delete as subDelete",
-                'sp.name'
+                'a.id',
+                'a.completed',
+                'a.requester_id',
+                'usr.username as requester_name',
+                'a.request_date',
+                "a.request_comment",
+                'a.responder_id',
+                'u.username as responder',
+                'a.respond_date',
+                "a.respond_comment",
+                'a.notifier_type_id',
+                'ntt.value as notifier_type',
+                'ad.id as approval_document_id',
+                'ad.path',
+                'ad.actual_name',
+                'ad.type',
+                'ad.size',
+                'ct.value as checklist_name'
             )
-            ->orderBy('p.priority')
             ->get();
-    }
-    public function formatRolePermissions($rolePermissions)
-    {
-        return $rolePermissions->groupBy('id')->map(function ($group) {
-            $subPermissions = $group->filter(function ($item) {
-                return $item->sub_permission_id !== null; // Filter for permissions that have sub-permissions
-            });
-
-            $permission = $group->first(); // Get the first permission for this group
-
-            $permission->view = false;
-            $permission->add = false;
-            $permission->delete = false;
-            $permission->edit = false;
-            if ($subPermissions->isNotEmpty()) {
-
-                $permission->sub = $subPermissions->map(function ($sub) {
-                    return [
-                        'id' => $sub->sub_permission_id,
-                        'name' => $sub->name,
-                        'add' => false,
-                        'delete' => false,
-                        'edit' => false,
-                        'view' => false
-                    ];
-                });
-            } else {
-                $permission->sub = [];
-            }
-            // // If there are no sub-permissions, remove the unwanted fields
-            unset($permission->sub_permission_id);
-            unset($permission->priority);
-            unset($permission->name);
-
-            return $permission;
-        })->values();
     }
 }

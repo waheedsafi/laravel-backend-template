@@ -40,7 +40,7 @@ The Minister of Public Health',
                 'description' => "We are committed to delivering quality health services throughout Afghanistan
                 "
             ],
-            'image' => 'app/public/slideshows/minister.png'
+            'image' => 'images/slideshows/minister.png'
         ],
         [
             'fa' => [
@@ -55,7 +55,7 @@ The Minister of Public Health',
                 'title' => 'Ministry of Public Health',
                 'description' => 'Increasing access to health services, maintaining the quality of services and improving health system performance in Afghanistan for achieving sustainable development goals.'
             ],
-            'image' => 'app/public/slideshows/minister1.jpg'
+            'image' => 'images/slideshows/minister1.jpg'
         ],
         [
             'fa' => [
@@ -73,7 +73,7 @@ The Minister of Public Health',
                 'description' => "On July 20, 2024, Honorable Mawlawi Noor Jalal Jalali, Minister of Public Health, during his visit to Switzerland, met with Dr. Tedros Adhanom Ghebreyesus, Director-General of the World Health Organization (WHO).
 The purpose of this meeting was to enhance coordination between the Ministry of Public Health and international health organizations, focusing on issues such as controlling infectious diseases and eradicating polio in Afghanistan."
             ],
-            'image' => 'app/public/slideshows/who.jpg'
+            'image' => 'images/slideshows/who.jpg'
 
         ],
     ];
