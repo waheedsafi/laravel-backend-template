@@ -6,6 +6,7 @@ enum RoleEnum: int
 {
     case super = 1;
     case debugger = 2;
+    case administrator = 3;
 
     public static function getList(): array
     {

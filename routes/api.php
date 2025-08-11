@@ -12,6 +12,7 @@ require __DIR__ . '/v1/template/slideshow.php';
 require __DIR__ . '/v1/template/checklist.php';
 require __DIR__ . '/v1/template/job.php';
 require __DIR__ . '/v1/template/user.php';
+require __DIR__ . '/v1/template/faqsType.php';
 require __DIR__ . '/v1/template/faqs.php';
 require __DIR__ . '/v1/template/media.php';
 require __DIR__ . '/v1/template/about.php';

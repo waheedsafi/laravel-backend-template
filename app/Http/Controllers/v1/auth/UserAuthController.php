@@ -179,10 +179,11 @@ class UserAuthController extends Controller
                 false,                         // raw
                 'None' // for dev, use 'None' to allow cross-origin if needed
             );
+
             return response()->json(
                 [
                     // "token" => $loggedIn['access_token'],
-                    "permissions" => $this->userRepository->userAuthFormattedPermissions($user->id),
+                    "permissions" => $this->userRepository->userAuthFormattedPermissions($user->role_id),
                     "user" => [
                         "id" => $user->id,
                         "full_name" => $user->full_name,

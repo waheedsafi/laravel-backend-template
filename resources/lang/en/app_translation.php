@@ -23,4 +23,6 @@ return [
     'user_need_approval' => 'User account require approval from authorized personnel.',
     'your_account_un_app' => 'Your account is under review and approval. Please be patient.',
     'approval_not_found' => 'Approval not found!',
+    'faq_type_not_found' => 'Faq type not found!',
+    'faq_not_found' => 'Faq not found!',
 ];

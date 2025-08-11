@@ -472,45 +472,13 @@ class TestingController extends Controller
     }
     public function testing(Request $request)
     {
-        $locale = App::getLocale();
-
-        return DB::table('approvals as a')
-            ->where("a.id", 1)
-            ->leftJoin('users as u', function ($join) {
-                $join->on('u.id', '=', 'a.responder_id');
-            })
-            ->join('notifier_type_trans as ntt', function ($join) use ($locale) {
-                $join->on('ntt.notifier_type_id', '=', 'a.notifier_type_id')
-                    ->where('ntt.language_name', $locale);
-            })
-            ->leftJoin('approval_documents as ad', 'ad.approval_id', '=', 'a.id')   // left join here
-            ->leftJoin('check_list_trans as ct', function ($join) use ($locale) {
-                $join->on('ct.check_list_id', '=', 'ad.check_list_id')
-                    ->where('ct.language_name', $locale);
-            })
-            ->join('users as usr', function ($join) {
-                $join->on('usr.id', '=', 'a.requester_id');
-            })
-            ->select(
-                'a.id',
-                'a.completed',
-                'a.requester_id',
-                'usr.username as requester_name',
-                'a.request_date',
-                "a.request_comment",
-                'a.responder_id',
-                'u.username as responder',
-                'a.respond_date',
-                "a.respond_comment",
-                'a.notifier_type_id',
-                'ntt.value as notifier_type',
-                'ad.id as approval_document_id',
-                'ad.path',
-                'ad.actual_name',
-                'ad.type',
-                'ad.size',
-                'ct.value as checklist_name'
-            )
-            ->get();
+        return dd(DB::table("role_permissions as up")
+            ->where("role", "=", 1)
+            ->where("permission", 6)
+            ->join("role_permission_subs as ups", function ($join) {
+                return $join->on('ups.role_permission_id', '=', 'up.id')
+                    ->where('ups.sub_permission_id', 96)
+                    ->where("ups.view", true);
+            })->select("ups.id")->first());
     }
 }
