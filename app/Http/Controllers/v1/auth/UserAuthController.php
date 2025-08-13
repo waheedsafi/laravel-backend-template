@@ -31,7 +31,7 @@ class UserAuthController extends Controller
     {
         $locale = App::getLocale();
         $user = $request->user();
-
+        $accessToken = request()->cookie('access_token',  null);
         $userStatus = DB::table('user_statuses as us')
             ->where("us.user_id", $user->id)
             ->where('is_active', true)
@@ -97,6 +97,7 @@ class UserAuthController extends Controller
                     "division" => $user->division,
                 ],
                 "permissions" => $this->userRepository->userAuthFormattedPermissions($user->role_id),
+                'access_token' => $accessToken
             ],
             200,
             [],
@@ -195,8 +196,8 @@ class UserAuthController extends Controller
                         "job" => $user->job,
                         "created_at" => $user->created_at,
                         "division" => $user->division,
-
                     ],
+                    'access_token' => $loggedIn['access_token']
                 ],
                 200,
                 [],
