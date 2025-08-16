@@ -8,6 +8,7 @@ class UserRepository implements UserRepositoryInterface
 {
     public function userAuthFormattedPermissions($role_id)
     {
+        $redisPermissions = [];
         $permissions = DB::table('roles as u')
             ->where('u.id', $role_id)
             ->join('role_permissions as up', 'u.id', '=', 'up.role')
@@ -19,7 +20,7 @@ class UserRepository implements UserRepositoryInterface
                 $join->on('up.id', '=', 'ups.role_permission_id')
                     ->where('ups.view', true);
             })
-            ->join('sub_permissions as sp', function ($join) {
+            ->leftJoin('sub_permissions as sp', function ($join) {
                 $join->on('ups.sub_permission_id', '=', 'sp.id');
             })
             ->select(
@@ -46,12 +47,15 @@ class UserRepository implements UserRepositoryInterface
             ->get();
 
         // Transform data to match desired structure (for example, if you need nested `sub` permissions)
-        $formattedPermissions = $permissions->groupBy('role_permission_id')->map(function ($group) {
+        $formattedPermissions = $permissions->groupBy('role_permission_id')->map(function ($group) use (&$redisPermissions) {
             $subPermissions = $group->filter(function ($item) {
                 return $item->sub_permission_id !== null; // Filter for permissions that have sub-permissions
             });
 
             $permission = $group->first(); // Get the first permission for this group
+
+            // For redis
+            $redisPermissions[] = $permission->permission;
 
             $permission->view = (bool) $permission->view;
             $permission->edit = (bool) $permission->edit;
@@ -86,6 +90,9 @@ class UserRepository implements UserRepositoryInterface
             return $permission;
         })->values();
 
-        return $formattedPermissions;
+        return [
+            'permissions' => $formattedPermissions,
+            'redisPermissions' => $redisPermissions,
+        ];
     }
 }

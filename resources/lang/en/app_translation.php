@@ -25,4 +25,7 @@ return [
     'approval_not_found' => 'Approval not found!',
     'faq_type_not_found' => 'Faq type not found!',
     'faq_not_found' => 'Faq not found!',
+    'user_sent_for_approval' => 'User :username is sent for approval.',
+    'user_approved' => 'User :username is approved.',
+    'user_rejected' => 'User :username is rejected.',
 ];

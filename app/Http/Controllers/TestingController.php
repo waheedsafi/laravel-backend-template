@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Permissions\PermissionEnum;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Email;
@@ -472,13 +473,11 @@ class TestingController extends Controller
     }
     public function testing(Request $request)
     {
-        return dd(DB::table("role_permissions as up")
-            ->where("role", "=", 1)
-            ->where("permission", 6)
-            ->join("role_permission_subs as ups", function ($join) {
-                return $join->on('ups.role_permission_id', '=', 'up.id')
-                    ->where('ups.sub_permission_id', 96)
-                    ->where("ups.view", true);
-            })->select("ups.id")->first());
+        return $users = DB::table('users as u')
+            ->join('role_permissions as rp', function ($join) {
+                $join->on('u.role_id', '=', 'rp.role')
+                    ->where('rp.permission', PermissionEnum::users->value);
+            })
+            ->select('u.id')->get();
     }
 }

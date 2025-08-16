@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1\template;
 
+use App\Enums\Permissions\PermissionEnum;
 use App\Models\User;
 use App\Models\Email;
 use App\Models\Contact;
@@ -23,6 +24,7 @@ use App\Http\Requests\v1\user\UserRegisterRequest;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Http\Requests\v1\user\UpdateUserPasswordRequest;
 use App\Repositories\Approval\ApprovalRepositoryInterface;
+use App\Repositories\Notification\NotificationRepositoryInterface;
 
 class UserController extends Controller
 {
@@ -30,14 +32,17 @@ class UserController extends Controller
     private $cacheName;
     protected $userRepository;
     protected $approvalRepository;
+    protected $notificationRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
         ApprovalRepositoryInterface $approvalRepository,
+        NotificationRepositoryInterface $notificationRepository,
     ) {
         $this->cacheName = 'user_statistics';
         $this->userRepository = $userRepository;
         $this->approvalRepository = $approvalRepository;
+        $this->notificationRepository = $notificationRepository;
     }
     public function index(Request $request)
     {
@@ -45,7 +50,6 @@ class UserController extends Controller
         $tr = [];
         $perPage = $request->input('per_page', 10); // Number of records per page
         $page = $request->input('page', 1); // Current page
-
         // Start building the query
         $query = DB::table('users as u')
             ->leftJoin('contacts as c', 'c.id', '=', 'u.contact_id')
@@ -75,7 +79,7 @@ class UserController extends Controller
                 "mjt.value as job",
             );
 
-        $this->applyDate($query, $request, 'u.created_at', 'u.created_at');
+        $this->applyDate($query, $request, 'created_at', 'u.created_at');
         $this->applyFilters($query, $request, [
             'username' => 'u.username',
             'created_at' => 'u.created_at',
@@ -87,7 +91,6 @@ class UserController extends Controller
             'contact' => 'c.value',
             'email' => 'e.value'
         ]);
-
         // Apply pagination (ensure you're paginating after sorting and filtering)
         $tr = $query->paginate($perPage, ['*'], 'page', $page);
         return response()->json(
@@ -229,6 +232,17 @@ class UserController extends Controller
                 NotifierEnum::confirm_adding_user->value,
                 $request->request_comment
             );
+            // Notification
+            $message = __('app_translation.user_sent_for_approval', ['username' => $newUser->username]);
+            $this->notificationRepository->sendNotification(
+                NotifierEnum::confirm_adding_user->value,
+                $message,
+                null,
+                null,
+                now(),
+                PermissionEnum::users->value,
+                'users'
+            );
         }
 
         UserStatus::create([
@@ -246,6 +260,7 @@ class UserController extends Controller
 
         DB::commit();
         Cache::forget($this->cacheName);
+
         return response()->json([
             'user' => [
                 "id" => $newUser->id,

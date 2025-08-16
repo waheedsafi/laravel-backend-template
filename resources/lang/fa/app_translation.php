@@ -26,5 +26,7 @@ return [
     'approval_not_found' => 'تاییدی پیدا نشد!',
     'faq_type_not_found' => 'نوع سوالات متداول یافت نشد!',
     'faq_not_found' => 'سوالات متداول یافت نشد!',
-
+    'user_sent_for_approval' => 'کاربر :username برای تأیید فرستاده شده است.',
+    'user_approved' => 'کاربر :username تایید شد.',
+    'user_rejected' => 'کاربر :username رد شد.',
 ];

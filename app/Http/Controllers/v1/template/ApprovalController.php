@@ -3,24 +3,17 @@
 namespace App\Http\Controllers\v1\template;
 
 use Carbon\Carbon;
-use App\Models\Ngo;
 use App\Models\User;
-use App\Models\Donor;
-use App\Models\Setting;
 use App\Models\Approval;
-use App\Models\Document;
-use App\Models\Agreement;
 use App\Models\UserStatus;
 use App\Traits\FilterTrait;
 use Illuminate\Http\Request;
-use App\Models\AgreementStatus;
-use App\Models\ApprovalDocument;
 use App\Enums\Types\NotifierEnum;
-use App\Models\AgreementDocument;
 use App\Enums\Statuses\StatusEnum;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Enums\Types\ApprovalTypeEnum;
+use App\Enums\Permissions\PermissionEnum;
 use App\Repositories\Approval\ApprovalRepositoryInterface;
 use App\Repositories\Notification\NotificationRepositoryInterface;
 
@@ -29,11 +22,14 @@ class ApprovalController extends Controller
     // use HelperTrait;
     use FilterTrait;
     protected $approvalRepository;
+    protected $notificationRepository;
 
     public function __construct(
         ApprovalRepositoryInterface $approvalRepository,
+        NotificationRepositoryInterface $notificationRepository,
     ) {
         $this->approvalRepository = $approvalRepository;
+        $this->notificationRepository = $notificationRepository;
     }
     public function approval($approval_id)
     {
@@ -63,6 +59,7 @@ class ApprovalController extends Controller
                 'message' => __('app_translation.approval_not_found'),
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
+        $message = '';
         DB::beginTransaction();
         $authUser = $request->user();
         if ($approval->requester_type === User::class) {
@@ -72,14 +69,18 @@ class ApprovalController extends Controller
                     ->where('is_active', true)
                     ->limit(1)
                     ->update(['is_active' => false]);
+                $user = DB::table('users as u')
+                    ->where('u.id', $approval->requester_id)
+                    ->first();
                 if ($request->approved) {
-                    $approval->approval_type_id = ApprovalTypeEnum::approved->value;
                     UserStatus::create([
                         "user_id" => $approval->requester_id,
                         "saved_by" => $request->user()->id,
                         "is_active" => true,
                         "status_id" => StatusEnum::active->value,
                     ]);
+                    $approval->approval_type_id = ApprovalTypeEnum::approved->value;
+                    $message = __('app_translation.user_approved', ['username' => $user->username ?? 'Unknown User']);
                 } else {
                     UserStatus::create([
                         "user_id" => $approval->requester_id,
@@ -88,6 +89,7 @@ class ApprovalController extends Controller
                         "status_id" => StatusEnum::rejected->value,
                     ]);
                     $approval->approval_type_id = ApprovalTypeEnum::rejected->value;
+                    $message = __('app_translation.user_rejected', ['username' => $user->username ?? 'Unknown User']);
                 }
             }
         }
@@ -98,6 +100,17 @@ class ApprovalController extends Controller
         $approval->save();
 
         DB::commit();
+
+        // Notification
+        $this->notificationRepository->sendNotification(
+            NotifierEnum::confirm_adding_user->value,
+            $message,
+            null,
+            null,
+            now(),
+            PermissionEnum::users->value,
+            'users'
+        );
         return response()->json([
             'message' => __('app_translation.success'),
         ], 200, [], JSON_UNESCAPED_UNICODE);

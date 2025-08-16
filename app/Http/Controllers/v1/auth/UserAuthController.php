@@ -9,23 +9,31 @@ use Sway\Utils\StringUtils;
 use Illuminate\Http\Request;
 use App\Traits\LogHelperTrait;
 use App\Enums\Statuses\StatusEnum;
+use App\Enums\Types\NotifierEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use App\Http\Requests\v1\auth\LoginRequest;
 use App\Repositories\User\UserRepositoryInterface;
+use App\Repositories\Redis\RedisRepositoryInterface;
 use App\Http\Requests\v1\auth\UpdateProfilePasswordRequest;
 
 class UserAuthController extends Controller
 {
     use LogHelperTrait;
     protected $userRepository;
+    protected $redisRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        RedisRepositoryInterface $redisRepository
+    ) {
         $this->userRepository = $userRepository;
+        $this->redisRepository = $redisRepository;
     }
     public function user(Request $request)
     {
@@ -82,6 +90,11 @@ class UserAuthController extends Controller
             )
             ->first();
 
+
+        $permssions = $this->userRepository->userAuthFormattedPermissions($user->role_id);
+        // 1. Store permissions in redis
+        $this->redisRepository->storeUserPermissions($permssions['redisPermissions'], $user->id);
+
         return response()->json(
             [
                 "user" => [
@@ -96,7 +109,7 @@ class UserAuthController extends Controller
                     "created_at" => $user->created_at,
                     "division" => $user->division,
                 ],
-                "permissions" => $this->userRepository->userAuthFormattedPermissions($user->role_id),
+                "permissions" => $permssions['permissions'],
                 'access_token' => $accessToken
             ],
             200,
@@ -181,10 +194,12 @@ class UserAuthController extends Controller
                 'None' // for dev, use 'None' to allow cross-origin if needed
             );
 
+            $permssions = $this->userRepository->userAuthFormattedPermissions($user->role_id);
+            // 1. Store permissions in redis
+            $this->redisRepository->storeUserPermissions($permssions['redisPermissions'], $user->id);
             return response()->json(
                 [
-                    // "token" => $loggedIn['access_token'],
-                    "permissions" => $this->userRepository->userAuthFormattedPermissions($user->role_id),
+                    "permissions" => $permssions['permissions'],
                     "user" => [
                         "id" => $user->id,
                         "full_name" => $user->full_name,
