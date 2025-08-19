@@ -2,15 +2,17 @@
 
 namespace App\Jobs;
 
-use App\Models\Notification;
 use Exception;
+use App\Models\Notification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use App\Enums\Languages\LanguageEnum;
+use App\Models\NotificationTrans;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\DB;
 
 class StoreNotificationJob implements ShouldQueue
 {
@@ -18,7 +20,8 @@ class StoreNotificationJob implements ShouldQueue
 
     public $data;
     public $permission;
-    public $sender_id;
+    public $requestDetail;
+
     /**
      * Number of times the job may be attempted.
      */
@@ -31,11 +34,11 @@ class StoreNotificationJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct($data, $permission, $sender_id)
+    public function __construct($data, $permission, $requestDetail)
     {
         $this->data = $data;
         $this->permission = $permission;
-        $this->sender_id = $sender_id;
+        $this->requestDetail = $requestDetail;
     }
     public function backoff(): int
     {
@@ -56,25 +59,21 @@ class StoreNotificationJob implements ShouldQueue
                 ->select('u.id')
                 ->get();
 
-            $now = $this->data['created_at'] ?? now();
-
-            $notifications = [];
-
             foreach ($users as $user) {
-                $notifications[] = [
+                $notification = Notification::create([
                     'user_id' => $user->id,
-                    'sender_id' => $this->sender_id,
+                    'sender_id' => $this->requestDetail['user_id'],
                     'notifier_type_id' => $this->data['notifier_id'],
-                    'message' => $this->data['message'],
                     'action_url' => $this->data['action_url'],
                     'context' => $this->data['context'], // Assuming DB column is JSON type
-                    'created_at' => $now,
-                    'updated_at' => $now, // Add if using Laravel timestamps
-                ];
-            }
-
-            if (!empty($notifications)) {
-                Notification::insert($notifications);
+                ]);
+                foreach (LanguageEnum::LANGUAGES as $code => $name) {
+                    NotificationTrans::create([
+                        'notification_id' => $notification->id,
+                        'language_name' => $code,
+                        'message' => $this->data['message'][$code],
+                    ]);
+                }
             }
         } catch (Exception $err) {
             // Exception caught and the variable $err is used here
@@ -83,11 +82,11 @@ class StoreNotificationJob implements ShouldQueue
                 'trace' => $err->getTraceAsString(),
                 'exception_type' => get_class($err),
                 'error_message' => $err->getMessage(),
-                'user_id' => request()->user() ? request()->user()->id : "N/K", // If you have an authenticated user, you can add the user ID
-                'username' => request()->user() ? request()->user()->username : "N/K", // If you have an authenticated user, you can add the user ID
-                'ip_address' => request()->ip(),
-                'method' => request()->method(),
-                'uri' => request()->fullUrl(),
+                'user_id' => $this->requestDetail['user_id'], // If you have an authenticated user, you can add the user ID
+                'username' =>  $this->requestDetail['username'], // If you have an authenticated user, you can add the user ID
+                'ip_address' =>  $this->requestDetail['ip_address'],
+                'method' =>  $this->requestDetail['method'],
+                'uri' =>  $this->requestDetail['uri'],
             ];
             LogErrorJob::dispatch($logData);
             Log::info('Global Exception =>' . json_encode($logData));

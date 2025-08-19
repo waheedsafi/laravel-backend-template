@@ -25,7 +25,6 @@ return new class extends Migration
             $table->foreign('notifier_type_id')->references('id')->on('notifier_types')
                 ->onUpdate('cascade')
                 ->onDelete('no action');
-            $table->text('message');
             $table->boolean('is_read')->default(false);
             $table->string('action_url')->nullable();
             $table->json('context')->nullable();

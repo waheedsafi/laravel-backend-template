@@ -300,4 +300,5 @@ return [
     'foods_book' => 'کتاب‌های غذایی',
     'books' => 'کتاب‌های',
     'audio_books' => 'کتاب‌های صوتی',
+    'you_reached_end' => 'به آخر رسیدی!'
 ];

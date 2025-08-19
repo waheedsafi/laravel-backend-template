@@ -12,6 +12,7 @@ use App\Enums\Types\NotifierEnum;
 use App\Enums\Statuses\StatusEnum;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Lang;
 use App\Enums\Types\ApprovalTypeEnum;
 use App\Enums\Permissions\PermissionEnum;
 use App\Repositories\Approval\ApprovalRepositoryInterface;
@@ -59,7 +60,7 @@ class ApprovalController extends Controller
                 'message' => __('app_translation.approval_not_found'),
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
-        $message = '';
+        $message = [];
         DB::beginTransaction();
         $authUser = $request->user();
         if ($approval->requester_type === User::class) {
@@ -80,7 +81,11 @@ class ApprovalController extends Controller
                         "status_id" => StatusEnum::active->value,
                     ]);
                     $approval->approval_type_id = ApprovalTypeEnum::approved->value;
-                    $message = __('app_translation.user_approved', ['username' => $user->username ?? 'Unknown User']);
+                    $message = [
+                        'en' => Lang::get('app_translation.user_approved', ['username' => $user->username ?? 'Unknown User'], 'en'),
+                        'fa' => Lang::get('app_translation.user_approved', ['username' => $user->username ?? 'Unknown User'], 'fa'),
+                        'ps' => Lang::get('app_translation.user_approved', ['username' => $user->username ?? 'Unknown User'], 'ps'),
+                    ];
                 } else {
                     UserStatus::create([
                         "user_id" => $approval->requester_id,
@@ -89,7 +94,11 @@ class ApprovalController extends Controller
                         "status_id" => StatusEnum::rejected->value,
                     ]);
                     $approval->approval_type_id = ApprovalTypeEnum::rejected->value;
-                    $message = __('app_translation.user_rejected', ['username' => $user->username ?? 'Unknown User']);
+                    $message = [
+                        'en' => Lang::get('app_translation.user_rejected', ['username' => $user->username ?? 'Unknown User'], 'en'),
+                        'fa' => Lang::get('app_translation.user_rejected', ['username' => $user->username ?? 'Unknown User'], 'fa'),
+                        'ps' => Lang::get('app_translation.user_rejected', ['username' => $user->username ?? 'Unknown User'], 'ps'),
+                    ];
                 }
             }
         }
@@ -107,7 +116,6 @@ class ApprovalController extends Controller
             $message,
             null,
             null,
-            now(),
             PermissionEnum::users->value,
             'users'
         );

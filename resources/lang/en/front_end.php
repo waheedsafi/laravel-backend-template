@@ -300,4 +300,5 @@ return [
     'foods_book' => 'Foods Books',
     'books' => 'Books',
     'audio_books' => 'Audio Books',
+    'you_reached_end' => 'You have reached the end!'
 ];

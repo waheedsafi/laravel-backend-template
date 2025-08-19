@@ -9,11 +9,10 @@ interface NotificationRepositoryInterface
      * 
      *
      * @param string $notifier_id
-     * @param string $message
+     * @param array $message
      * @param string $action_url
      * @param string $context
-     * @param string $created_at
      * @param string $permission
      */
-    public function sendNotification($notifier_id, $message, $action_url, $context, $created_at, $permission, $permissionName);
+    public function sendNotification($notifier_id, $message, $action_url, $context, $permission, $permissionName);
 }

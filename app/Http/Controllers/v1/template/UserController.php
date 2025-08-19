@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\v1\template;
 
-use App\Enums\Permissions\PermissionEnum;
 use App\Models\User;
 use App\Models\Email;
 use App\Models\Contact;
@@ -18,7 +17,9 @@ use App\Enums\Permissions\RoleEnum;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Cache;
+use App\Enums\Permissions\PermissionEnum;
 use App\Http\Requests\v1\user\UpdateUserRequest;
 use App\Http\Requests\v1\user\UserRegisterRequest;
 use App\Repositories\User\UserRepositoryInterface;
@@ -91,6 +92,7 @@ class UserController extends Controller
             'contact' => 'c.value',
             'email' => 'e.value'
         ]);
+
         // Apply pagination (ensure you're paginating after sorting and filtering)
         $tr = $query->paginate($perPage, ['*'], 'page', $page);
         return response()->json(
@@ -233,13 +235,16 @@ class UserController extends Controller
                 $request->request_comment
             );
             // Notification
-            $message = __('app_translation.user_sent_for_approval', ['username' => $newUser->username]);
+            $message = [
+                'en' => Lang::get('app_translation.user_sent_for_approval', ['username' => $newUser->username ?? 'Unknown User'], 'en'),
+                'fa' => Lang::get('app_translation.user_sent_for_approval', ['username' => $newUser->username ?? 'Unknown User'], 'fa'),
+                'ps' => Lang::get('app_translation.user_sent_for_approval', ['username' => $newUser->username ?? 'Unknown User'], 'ps'),
+            ];
             $this->notificationRepository->sendNotification(
                 NotifierEnum::confirm_adding_user->value,
                 $message,
                 null,
                 null,
-                now(),
                 PermissionEnum::users->value,
                 'users'
             );

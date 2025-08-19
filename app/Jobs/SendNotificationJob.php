@@ -54,9 +54,8 @@ class SendNotificationJob implements ShouldQueue
                     'trace' => json_encode($this->data),
                     'exception_type' => 'N/K',
                     'error_message' => $response->body(),
-                    'user_id' => request()->user() ? request()->user()->id : "N/K", // If you have an authenticated user, you can add the user ID
-                    'username' => request()->user() ? request()->user()->username : "N/K", // If you have an authenticated user, you can add the user ID
-                    'ip_address' => 'N/K',
+                    'user_id' => $this->requestDetail['user_id'],
+                    'username' =>  $this->requestDetail['username'],
                     'method' => 'POST',
                     'uri' => $this->url,
                 ];

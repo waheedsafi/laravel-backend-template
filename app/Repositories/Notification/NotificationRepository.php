@@ -7,24 +7,16 @@ use App\Jobs\StoreNotificationJob;
 
 class NotificationRepository implements NotificationRepositoryInterface
 {
-    public function sendNotification($notifier_id, $message, $action_url, $context, $created_at, $permission, $permissionName)
+    public function sendNotification($notifier_id, $message, $action_url, $context, $permission, $permissionName)
     {
-        $data =  [
+        $data = [
             'notifier_id' => $notifier_id,
             'message' => $message,
-            'created_at' => $created_at,
             'action_url' => $action_url,
             'context' => $context,
+            'created_at' => now(),
             'permissionName' => $permissionName,
-            'created_at' => $created_at,
         ];
-        // 1. Store notification for authorized users
-        StoreNotificationJob::dispatch(
-            $data,
-            $permission,
-            request()->user()->id
-        );
-        // 2. Send to express to give them notification
         $requestDetail = [
             'user_id' => request()->user() ? request()->user()->id : "N/K",
             'username' => request()->user() ? request()->user()->username : "N/K",
@@ -32,6 +24,15 @@ class NotificationRepository implements NotificationRepositoryInterface
             'method' => request()->method(),
             'uri' => request()->fullUrl(),
         ];
+        // 1. Store notification for authorized users
+        StoreNotificationJob::dispatch(
+            $data,
+            $permission,
+            $requestDetail
+        );
+        // 2. Send to express to give them notification
+
+
         SendNotificationJob::dispatch(
             'http://localhost:8001/api/v1/notification',
             $data,
