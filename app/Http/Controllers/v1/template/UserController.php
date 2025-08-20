@@ -347,7 +347,7 @@ class UserController extends Controller
     {
         DB::beginTransaction();
         $user = User::find($id);
-        if ($user->role_id == RoleEnum::super->value) {
+        if ($user->role_id == RoleEnum::super->value || $user->role_id == RoleEnum::debugger->value) {
             return response()->json([
                 'message' => __('app_translation.unauthorized'),
             ], 403, [], JSON_UNESCAPED_UNICODE);
