@@ -80,7 +80,7 @@ class UserController extends Controller
                 "mjt.value as job",
             );
 
-        $this->applyDate($query, $request, 'created_at', 'u.created_at');
+        $this->applyDate($query, $request, 'u.created_at', 'u.created_at');
         $this->applyFilters($query, $request, [
             'username' => 'u.username',
             'created_at' => 'u.created_at',

@@ -28,4 +28,8 @@ return [
     'user_sent_for_approval' => 'User :username is sent for approval.',
     'user_approved' => 'User :username is approved.',
     'user_rejected' => 'User :username is rejected.',
+    'all' => 'All',
+    'deleted' => 'deleted',
+    'created' => 'created',
+    'updated' => 'updated',
 ];

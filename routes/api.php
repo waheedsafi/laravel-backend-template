@@ -1,6 +1,7 @@
 <?php
 
 
+require __DIR__ . '/v1/template/audit.php';
 require __DIR__ . '/v1/template/notifications.php';
 require __DIR__ . '/v1/template/log.php';
 require __DIR__ . '/v1/template/approval.php';

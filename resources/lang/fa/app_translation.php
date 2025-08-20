@@ -29,4 +29,8 @@ return [
     'user_sent_for_approval' => 'کاربر :username برای تأیید فرستاده شده است.',
     'user_approved' => 'کاربر :username تایید شد.',
     'user_rejected' => 'کاربر :username رد شد.',
+    'all' => 'همه',
+    'deleted' => 'حذف شده',
+    'created' => 'ایجاد شده',
+    'updated' => 'ویرایش شده',
 ];
