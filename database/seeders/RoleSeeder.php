@@ -34,6 +34,24 @@ class RoleSeeder extends Seeder
             "role_id" => $item->id
         ]);
         $item = Role::factory()->create([
+            "id" => RoleEnum::administrator,
+        ]);
+        RoleTrans::factory()->create([
+            "value" => "مدیر سیستم",
+            "language_name" => "fa",
+            "role_id" => $item->id
+        ]);
+        RoleTrans::factory()->create([
+            "value" => "د سیسټم مدیر",
+            "language_name" => "ps",
+            "role_id" => $item->id
+        ]);
+        RoleTrans::factory()->create([
+            "value" => "System administrator",
+            "language_name" => "en",
+            "role_id" => $item->id
+        ]);
+        $item = Role::factory()->create([
             "id" => RoleEnum::debugger,
         ]);
         RoleTrans::factory()->create([
@@ -52,6 +70,6 @@ class RoleSeeder extends Seeder
             "role_id" => $item->id
         ]);
         // ✅ Reset sequence to avoid future conflicts
-        // DB::statement("SELECT setval('roles_id_seq', (SELECT MAX(id) FROM roles))");
+        DB::statement("SELECT setval('roles_id_seq', (SELECT MAX(id) FROM roles))");
     }
 }

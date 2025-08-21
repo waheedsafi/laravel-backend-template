@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('faq_id');
             $table->foreign('faq_id')->references('id')->on('faqs')
                 ->onUpdate('cascade')
-                ->onDelete('no action');
+                ->onDelete('cascade');
             $table->string('language_name');
             $table->foreign('language_name')->references('name')->on('languages')
                 ->onUpdate('cascade')

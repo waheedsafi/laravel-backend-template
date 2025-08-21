@@ -19,11 +19,13 @@ enum SubPermissionEnum: int
     case configurations_checklist = 32;
     case configurations_division = 33;
     case configurations_role = 34;
+    case configurations_application = 35;
     public const CONFIGURATIONS = [
         31 => ['label' => "job", 'is_category' => true],
         32 => ['label' => "checklist", 'is_category' => true],
         33 => ['label' => "division", 'is_category' => true],
         34 => ['label' => "role", 'is_category' => true],
+        35 => ['label' => "application", 'is_category' => true],
     ];
 
         // Approval
@@ -44,12 +46,16 @@ enum SubPermissionEnum: int
     case about_office = 93;
     case about_technical = 94;
     case about_slideshow = 95;
+    case about_faqs = 96;
+    case about_faqs_type = 97;
     public const ABOUT = [
         91 => ['label' => "director", 'is_category' => true],
         92 => ['label' => "manager", 'is_category' => true],
         93 => ['label' => "office", 'is_category' => true],
         94 => ['label' => "technical_sup", 'is_category' => true],
         95 => ['label' => "slideshow", 'is_category' => true],
+        96 => ['label' => "faqs", 'is_category' => true],
+        97 => ['label' => "faqs_type", 'is_category' => true],
     ];
     public static function getMetaById(int $id): ?array
     {

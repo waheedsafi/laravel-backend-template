@@ -23,60 +23,58 @@ class AboutSeeder extends Seeder
     private $slideshows = [
         [
             'fa' => [
-                'title' => 'مصاحبه برنامه‌نویسی: ۱۸۹ سوال و راه‌حل برنامه‌نویسی (مصاحبه و شغل)وميو دٸوس',
-                'description' => 'زه استخدام کوونکی نه یم. زه یو سافټویر انجنیر یم. او په دې توګه، زه پوهیږم چې دا څه ډول دی چې له تاسو څخه وغوښتل شي چې په ځای کې غوره الګوریتمونه جوړ کړئ او بیا په سپینه تخته کې بې عیب کوډ ولیکئ. زه د یو نوماند او مرکه کونکي په توګه له دې څخه تیر شوی یم.
-                    د کوډ کولو مرکې کریک کول، شپږمه نسخه دلته ده چې تاسو سره د دې پروسې له لارې مرسته وکړي، تاسو ته هغه څه درس درکوي چې تاسو ورته اړتیا لرئ پوه شئ او تاسو ته وړتیا درکوي چې په خپل غوره فعالیت کې کار وکړئ. ما د سلګونو سافټویر انجنیرانو روزنه او مرکې کړې دي. پایله دا کتاب دی.
-                    زده کړئ چې څنګه په یوه پوښتنه کې اشارې او پټ توضیحات افشا کړئ، ومومئ چې څنګه ستونزه په اداره کیدونکو ټوټو وویشئ، تخنیکونه رامینځته کړئ ترڅو ځان خلاص کړئ کله چې بند پاتې شئ، د کمپیوټر ساینس اصلي مفکورې زده کړئ (یا بیا زده کړئ)، او د 189 مرکې پوښتنو او حلونو تمرین وکړئ.'
+                'title' => 'مولوي نور جلال جلالي
+وزیر صحت عامه',
+                'description' => 'ما متعهد به ارائه خدمات صحی معیاری در سراسر کشور هستیم.'
             ],
             'ps' => [
-                'title' => 'د کوډ کولو مرکې ماتول: د پروګرام کولو ۱۸۹ پوښتنې او حل لارې (د مرکې او مسلک ماتول)',
-                'description' => "من استخدام‌کننده نیستم. من یک مهندس نرم‌افزار هستم. و به همین دلیل، می‌دانم که از شما خواسته می‌شود الگوریتم‌های درخشان را درجا بنویسید و سپس کد بی‌عیب و نقصی را روی تخته سفید بنویسید. من این را به عنوان یک کاندیدا و به عنوان یک مصاحبه‌کننده تجربه کرده‌ام.
-                    کتاب «شکستن مصاحبه کدنویسی، ویرایش ششم» اینجاست تا در این فرآیند به شما کمک کند، آنچه را که باید بدانید به شما آموزش دهد و شما را قادر سازد تا بهترین عملکرد خود را داشته باشید. من صدها مهندس نرم‌افزار را مربیگری و مصاحبه کرده‌ام. نتیجه این کتاب است.
-                    یاد بگیرید که چگونه نکات و جزئیات پنهان یک سوال را کشف کنید، کشف کنید که چگونه یک مشکل را به بخش‌های قابل مدیریت تقسیم کنید، تکنیک‌هایی را برای رهایی از گیر افتادن در مصاحبه توسعه دهید، مفاهیم اصلی علوم کامپیوتر را یاد بگیرید (یا دوباره یاد بگیرید) و روی ۱۸۹ سوال و راه‌حل مصاحبه تمرین کنید."
+                'title' => 'مولوي نورجلال جلالي
+
+د عامې روغتیا وزیر',
+                'description' => "موږ په ټول هېواد کې، معیاري روغتیایي خدمتونو ته ژمن یو."
             ],
             'en' => [
-                'title' => 'Cracking the Coding Interview: 189 Programming Questions and Solutions (Cracking the Interview & Career)',
-                'description' => "I am not a recruiter. I am a software engineer. And as such, I know what it's like to be asked to whip up brilliant algorithms on the spot and then write flawless code on a whiteboard. I've been through this as a candidate and as an interviewer.
-                     Cracking the Coding Interview, 6th Edition is here to help you through this process, teaching you what you need to know and enabling you to perform at your very best. I've coached and interviewed hundreds of software engineers. The result is this book.
-                     Learn how to uncover the hints and hidden details in a question, discover how to break down a problem into manageable chunks, develop techniques to unstick yourself when stuck, learn (or re-learn) core computer science concepts, and practice on 189 interview questions and solutions."
+                'title' => 'Mawlawi Noor Jalal Jalali
+
+The Minister of Public Health',
+                'description' => "We are committed to delivering quality health services throughout Afghanistan
+                "
             ],
-            'image' => 'https://m.media-amazon.com/images/I/61mIq2iJUXL._SY425_.jpg'
+            'image' => 'images/slideshows/minister.png'
         ],
         [
             'fa' => [
-                'title' => "مدیریت حافظه ++C: نوشتن کد ++C کم‌حجم‌تر و ایمن‌تر با استفاده از تکنیک‌های اثبات‌شده مدیریت حافظه",
-                'description' => "++C به توسعه‌دهندگان قدرت بی‌نظیری در مدیریت حافظه می‌دهد، اما قدرت زیاد، مسئولیت زیادی نیز به همراه دارد. مدیریت ضعیف حافظه می‌تواند منجر به خرابی، تنگناهای عملکرد و آسیب‌پذیری‌های امنیتی شود.
-                    چه روی سیستم‌های بلادرنگ، موتورهای بازی، برنامه‌های مالی یا دستگاه‌های تعبیه‌شده کار کنید، تسلط بر مدیریت حافظه برای ساخت نرم‌افزارهای قوی و با کارایی بالا ضروری است. این کتاب نگاهی عمیق به مدیریت حافظه مدرن ++C ارائه می‌دهد و هم اصول اساسی و هم تکنیک‌های پیشرفته مورد استفاده متخصصان برای بهینه‌سازی برنامه‌ها را پوشش می‌دهد. این کتاب شکاف بین دانش نظری و پیاده‌سازی عملی را پر می‌کند و تضمین می‌کند که شما نه تنها «چه چیزی» را درک می‌کنید، بلکه..."
+                'title' => "  ",
+                'description' => "ما متعهد به ارائه خدمات صحی معیاری در سراسر کشور هستیم."
             ],
             'ps' => [
-                'title' => "د C++ حافظې مدیریت: د ثابت شوي حافظې مدیریت تخنیکونو په کارولو سره د C++ کوډ ډیر نرم او خوندي ولیکئ.",
-                'description' => "د C++ حافظې مدیریت: د ثابت شوي حافظې مدیریت تخنیکونو په کارولو سره د C++ کوډ ډیر خوندي او خوندي ولیکئ',
-                    'تفصیل' => 'C++ پراختیا کونکو ته د حافظې په اړه بې ساري ځواک ورکوي، مګر د لوی ځواک سره لوی مسؤلیت راځي. د حافظې ضعیف اداره کول کولی شي د کریشونو، فعالیت خنډونو، او امنیتي زیانونو لامل شي.
-                     که تاسو په ریښتیني وخت سیسټمونو، د لوبې انجنونو، مالي غوښتنلیکونو، یا ایمبیډ شوي وسیلو کې کار کوئ، د حافظې مدیریت ماسټر کول د قوي او لوړ فعالیت سافټویر جوړولو لپاره اړین دا کتاب د عصري C++ حافظې مدیریت کې ژوره غوطه وړاندې کوي، دواړه بنسټیز اصول او پرمختللي تخنیکونه پوښي چې د متخصصینو لخوا د غوښتنلیکونو غوره کولو لپاره کارول کیږي. دا د تیوریکي پوهې او عملي پلي کولو ترمنځ تشه ډکوي، ډاډ ترلاسه کوي چې تاسو نه یوازې  پوهیږئ مګر/"
+                'title' => "د عامې روغتیا وزارت",
+                'description' => "د دوامدارې پراختيا په موخه د افغانستان روغتيايي سیستم کې روغتيايي خدمتونو ته د لاسرسي کچې زياتوالی، د خدمتونو د کیفیت ساتل او  د اغیزمنتیا لوړوالی"
             ],
             'en' => [
-                'title' => 'C++ Memory Management: Write leaner and safer C++ code using proven memory-management techniques',
-                'description' => 'C++ gives developers unparalleled power over memory, but with great power comes great responsibility. Poor memory handling can lead to crashes, performance bottlenecks, and security vulnerabilities.
-                     Whether you’re working on real-time systems, game engines, financial applications, or embedded devices, mastering memory management is essential to building robust and high-performance software. This book provides a deep dive into modern C++ memory management, covering both fundamental principles and advanced techniques used by experts to optimize applications. It bridges the gap between theoretical knowledge and practical implementation, ensuring that you not only understand the "what" but/'
+                'title' => 'Ministry of Public Health',
+                'description' => 'Increasing access to health services, maintaining the quality of services and improving health system performance in Afghanistan for achieving sustainable development goals.'
             ],
-            'image' => 'https://m.media-amazon.com/images/I/71Csss0+FWL._SY385_.jpg'
+            'image' => 'images/slideshows/minister1.jpg'
         ],
         [
             'fa' => [
-                'title' => "راهنمای جیبی لینوکس: دستورات ضروری (راهنماهای جیبی لینوکس)",
-                'description' => "اگر در کار روزمره خود از لینوکس استفاده می‌کنید، کتاب «راهنمای جیبی لینوکس» مرجع کاملی برای استفاده در محل کار است. این نسخه که به طور کامل در بیستمین سالگرد انتشار به‌روزرسانی شده است، بیش از ۲۰۰ دستور لینوکس، از جمله دستورات جدید برای مدیریت فایل، مدیریت بسته، کنترل نسخه، تبدیل فرمت فایل و موارد دیگر را توضیح می‌دهد.
-                     در این راهنمای مختصر، نویسنده، دنیل برت، مفیدترین دستورات لینوکس را بر اساس عملکرد دسته‌بندی کرده است. چه تازه‌کار باشید و چه کاربر باتجربه، این کتاب کاربردی مرجعی ایده‌آل برای مهم‌ترین دستورات لینوکس است."
+                'title' => "دیدار جناب وزیرصاحب  وزارت صحت عامه با رئیس سازمان جهانی صحت در سوئیس",
+                'description' => "در تاریخ ۲۰ جولای ۲۰۲۴، محترم مولوی نور جلال جلالی، وزیر صحت عامه در جریان سفر خود به سوئیس با دکتر تدروس آدهانوم گبریسوس، مدیرکل سازمان جهانی صحت (WHO)، دیدار کرد.
+هدف این دیدار افزایش هماهنگی بین وزارت صحت عامه و سازمان‌های صحی بین‌المللی بود که روی مسائلی مانند کنترل بیماری‌های واگیر و ریشه‌ کن ‌سازی فلج اطفال در افغانستان تمرکز داشت.
+"
             ],
             'ps' => [
                 'title' => "د لینکس پاکټ لارښود: اړین امرونه (د لینکس پاکټ لارښودونه)",
                 'description' => 'که تاسو په خپل ورځني کار کې لینکس کاروئ، نو د لینکس پاکټ لارښود د دندې پرمهال یو مناسب حواله ده. دا په بشپړه توګه تازه شوی د شلمې کلیزې نسخه د 200 څخه ډیر لینکس قوماندې تشریح کوي، پشمول د فایل اداره کولو، د بسته بندۍ مدیریت، د نسخې کنټرول، د فایل فارمیټ تبادلو، او نورو لپاره نوي قوماندې.پدې لنډ لارښود کې، لیکوال ډینیل بیرټ د فعالیت له مخې ګروپ شوي خورا ګټور لینکس قوماندې چمتو کوي. که تاسو یو نوی یا تجربه لرونکی کارونکی یاست، دا عملي کتاب د خورا مهم لینکس قوماندې لپاره یو مثالی حواله ده.'
             ],
             'en' => [
-                'title' => 'Linux Pocket Guide: Essential Commands (Linux Pocket Guides)',
-                'description' => "If you use Linux in your day-to-day work, then Linux Pocket Guide is the perfect on-the-job reference. This thoroughly updated 20th anniversary edition explains more than 200 Linux commands, including new commands for file handling, package management, version control, file format conversions, and more.
-                     In this concise guide, author Daniel Barrett provides the most useful Linux commands grouped by functionality. Whether you're a novice or an experienced user, this practical book is an ideal reference for the most important Linux commands."
+                'title' => 'Meeting of the Honorable Minister of Public Health with the Director-General of the World Health Organization in Switzerland',
+                'description' => "On July 20, 2024, Honorable Mawlawi Noor Jalal Jalali, Minister of Public Health, during his visit to Switzerland, met with Dr. Tedros Adhanom Ghebreyesus, Director-General of the World Health Organization (WHO).
+The purpose of this meeting was to enhance coordination between the Ministry of Public Health and international health organizations, focusing on issues such as controlling infectious diseases and eradicating polio in Afghanistan."
             ],
-            'image' => 'https://m.media-amazon.com/images/I/41jWjmIoJYL._SY445_SX342_.jpg'
+            'image' => 'images/slideshows/who.jpg'
+
         ],
     ];
     public function run(): void
@@ -193,22 +191,22 @@ class AboutSeeder extends Seeder
     {
         $item = AboutStaff::factory()->create([
             "about_staff_type_id" => AboutStaffEnum::manager,
-            "contact" => "+93202301375",
-            "email" => "manager@moph.gov.af",
-            "profile" => 'images/technical/general.jpg',
+            "contact" => "+93700591273",
+            "email" => "Fazalhadi980@gmail.com",
+            "profile" => 'images/technical/manager.jpg',
         ]);
         AboutStaffTrans::factory()->create([
-            "name" => "مدیر",
+            "name" => "فضل هادی دورانی(مدیر)",
             "language_name" => "fa",
             "about_staff_id" => $item->id
         ]);
         AboutStaffTrans::factory()->create([
-            "name" => "مدیر",
+            "name" =>  "فضل هادی دورانی (مدیر)",
             "language_name" => "ps",
             "about_staff_id" => $item->id
         ]);
         AboutStaffTrans::factory()->create([
-            "name" => "Manager",
+            "name" => "Fazel Handi Durani (Manager)",
             "language_name" => "en",
             "about_staff_id" => $item->id
         ]);
@@ -217,22 +215,22 @@ class AboutSeeder extends Seeder
     {
         $item = AboutStaff::factory()->create([
             "about_staff_type_id" => AboutStaffEnum::director,
-            "contact" => "+93202301376",
-            "email" => "director@moph.gov.af",
-            "profile" => 'images/technical/general.jpg',
+            "contact" => "+93766933024",
+            "email" => "Mansoorikabul@gmail.com",
+            "profile" => 'images/technical/director.jpg',
         ]);
         AboutStaffTrans::factory()->create([
-            "name" => "رئیس",
+            "name" => "مولوی محمد داوود منصوری(رئیس)",
             "language_name" => "fa",
             "about_staff_id" => $item->id
         ]);
         AboutStaffTrans::factory()->create([
-            "name" => "رئیس",
+            "name" => "مولوی محمد داوود منصوری(رئیس)",
             "language_name" => "ps",
             "about_staff_id" => $item->id
         ]);
         AboutStaffTrans::factory()->create([
-            "name" => "Director",
+            "name" => "Mawlavi Mohammad Dawood Mansoori (Director)",
             "language_name" => "en",
             "about_staff_id" => $item->id
         ]);
@@ -280,6 +278,50 @@ class AboutSeeder extends Seeder
         ]);
         AboutStaffTrans::factory()->create([
             "name" => "Jalal Bakhti (Software Developer)",
+            "language_name" => "en",
+            "about_staff_id" => $item->id
+        ]);
+        //3
+        $item = AboutStaff::factory()->create([
+            "about_staff_type_id" => AboutStaffEnum::technical_support,
+            "contact" => "+93767028775",
+            "email" => "wahidsafi.198@gmial.com",
+            "profile" => 'images/technical/waheed.jpg',
+        ]);
+        AboutStaffTrans::factory()->create([
+            "name" => "وحیدالله صافی (توسعه دهنده نرم افزار)",
+            "language_name" => "fa",
+            "about_staff_id" => $item->id
+        ]);
+        AboutStaffTrans::factory()->create([
+            "name" => "وحیدالله صافی (د سافټویر جوړونکی)",
+            "language_name" => "ps",
+            "about_staff_id" => $item->id
+        ]);
+        AboutStaffTrans::factory()->create([
+            "name" => "Waheedullah Safi(Software Developer)",
+            "language_name" => "en",
+            "about_staff_id" => $item->id
+        ]);
+        //4.
+        $item = AboutStaff::factory()->create([
+            "about_staff_type_id" => AboutStaffEnum::technical_support,
+            "contact" => "+93787059015",
+            "email" => "imrankhanorya@gmail.com",
+            "profile" => 'images/technical/imran.jpg',
+        ]);
+        AboutStaffTrans::factory()->create([
+            "name" => "عمران اوریا (توسعه دهنده نرم افزار)",
+            "language_name" => "fa",
+            "about_staff_id" => $item->id
+        ]);
+        AboutStaffTrans::factory()->create([
+            "name" => " عمران اوریا (د سافټویر جوړونکی)",
+            "language_name" => "ps",
+            "about_staff_id" => $item->id
+        ]);
+        AboutStaffTrans::factory()->create([
+            "name" => "Imran Orya (Software Developer)",
             "language_name" => "en",
             "about_staff_id" => $item->id
         ]);

@@ -2,9 +2,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Enums\Permissions\PermissionEnum;
+use App\Enums\Permissions\SubPermissionEnum;
 use App\Http\Controllers\v1\template\ApplicationController;
-use Illuminate\Support\Facades\File;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 Route::prefix('v1')->group(function () {
     Route::get('/lang/{locale}', [ApplicationController::class, 'changeLocale']);
@@ -15,7 +15,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/genders', [ApplicationController::class, "genders"]);
     Route::get('/currencies', [ApplicationController::class, "currencies"]);
     Route::get('/fonts/{filename}', [ApplicationController::class, "fonts"]);
+
+    // Applications
+    Route::get('/applications', [ApplicationController::class, "applications"]);
+    Route::put('/applications', [ApplicationController::class, "updateApplication"]);
 });
-// Route::prefix('v1')->middleware(["multiAuthorized:" . 'user:api,ngo:api'])->group(function () {
-//     Route::post('/validate/email/contact', [ApplicationController::class, "validateEmailContact"]);
-// });

@@ -19,6 +19,18 @@ return [
     'select_item' => 'یک مورد را انتخاب کنید',
     'invalid_user_or_pass' => 'ایمیل یا رمز عبور نادرست است. لطفا دوباره امتحان کنید.',
     'unauthorized_to_set' => 'شما مجاز به اعطای نقش به دیگران نیستید.',
-    'account_is_block' => 'حساب کاربری قفل است.'
-
+    'account_is_block' => 'حساب کاربری قفل است.',
+    'application_not_found' => 'برنامه پیدا نشد!',
+    'user_need_approval' => 'حساب کاربری نیاز به تأیید از سوی افراد صلاحیت‌دار دارد.',
+    'your_account_un_app' => 'حساب کاربری شما در حال بررسی و تأیید می‌باشد. لطفاً شکیبا باشید.',
+    'approval_not_found' => 'تاییدی پیدا نشد!',
+    'faq_type_not_found' => 'نوع سوالات متداول یافت نشد!',
+    'faq_not_found' => 'سوالات متداول یافت نشد!',
+    'user_sent_for_approval' => 'کاربر :username برای تأیید فرستاده شده است.',
+    'user_approved' => 'کاربر :username تایید شد.',
+    'user_rejected' => 'کاربر :username رد شد.',
+    'all' => 'همه',
+    'deleted' => 'حذف شده',
+    'created' => 'ایجاد شده',
+    'updated' => 'ویرایش شده',
 ];

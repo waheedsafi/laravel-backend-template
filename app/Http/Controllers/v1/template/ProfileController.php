@@ -34,7 +34,7 @@ class ProfileController extends Controller
                     'message' => __('app_translation.email_exist'),
                 ], 409, [], JSON_UNESCAPED_UNICODE);
             }
-        } else {
+        } else if ($request->email) {
             $email = Email::where('id', $authUser->email_id)->first();
             $email->value = $request->email;
             $email->save();
@@ -50,7 +50,7 @@ class ProfileController extends Controller
                     'message' => __('app_translation.contact_exist'),
                 ], 409, [], JSON_UNESCAPED_UNICODE);
             }
-        } else {
+        } else if ($request->contact) {
             $contact = Contact::where('id', $authUser->contact_id)->first();
             $contact->value = $request->contact;
             $contact->save();

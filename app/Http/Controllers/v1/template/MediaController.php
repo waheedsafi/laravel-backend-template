@@ -30,7 +30,18 @@ class MediaController extends Controller
         if (!file_exists($path)) {
             return response()->json([
                 'message' => __('app_translation.file_not_found'),
-                'path' => $path,
+            ], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+        return response()->file($path);
+    }
+    public function privateFile(Request $request)
+    {
+        $filePath = $request->query('path');
+        $path = $this->transformToPrivate($filePath);
+
+        if (!file_exists($path)) {
+            return response()->json([
+                'message' => __('app_translation.file_not_found'),
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->file($path);

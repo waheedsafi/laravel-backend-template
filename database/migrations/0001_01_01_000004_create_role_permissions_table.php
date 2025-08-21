@@ -18,20 +18,16 @@ return new class extends Migration
             $table->boolean('add');
             $table->boolean('view');
             $table->boolean("visible")->default(true);
-
-            // Make role nullable to allow SET NULL
-            $table->unsignedBigInteger('role')->nullable();
+            $table->unsignedBigInteger('role');
             $table->foreign('role')
                 ->references('id')->on('roles')
                 ->onUpdate('cascade')
-                ->onDelete('set null');
-
+                ->onDelete('no action');
             $table->unsignedBigInteger('permission');
             $table->foreign('permission')
                 ->references('id')->on('permissions')
                 ->onUpdate('cascade')
-                ->onDelete('cascade');
-
+                ->onDelete('no action');
             $table->index(["permission", "role"]);
             $table->timestamps();
         });

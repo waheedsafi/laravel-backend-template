@@ -9,29 +9,37 @@ use Sway\Utils\StringUtils;
 use Illuminate\Http\Request;
 use App\Traits\LogHelperTrait;
 use App\Enums\Statuses\StatusEnum;
+use App\Enums\Types\NotifierEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use App\Http\Requests\v1\auth\LoginRequest;
 use App\Repositories\User\UserRepositoryInterface;
+use App\Repositories\Redis\RedisRepositoryInterface;
 use App\Http\Requests\v1\auth\UpdateProfilePasswordRequest;
 
 class UserAuthController extends Controller
 {
     use LogHelperTrait;
     protected $userRepository;
+    protected $redisRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        RedisRepositoryInterface $redisRepository
+    ) {
         $this->userRepository = $userRepository;
+        $this->redisRepository = $redisRepository;
     }
     public function user(Request $request)
     {
         $locale = App::getLocale();
         $user = $request->user();
-
+        $accessToken = request()->cookie('access_token',  null);
         $userStatus = DB::table('user_statuses as us')
             ->where("us.user_id", $user->id)
             ->where('is_active', true)
@@ -41,6 +49,13 @@ class UserAuthController extends Controller
             return response()->json([
                 'message' => __('app_translation.account_is_block'),
             ], 401, [], JSON_UNESCAPED_UNICODE);
+        } else if (
+            $userStatus->status_id == StatusEnum::pending->value ||
+            $userStatus->status_id == StatusEnum::rejected->value
+        ) {
+            return response()->json([
+                'message' => __('app_translation.your_account_un_app'),
+            ], 403, [], JSON_UNESCAPED_UNICODE);
         }
 
         $user = DB::table('users as u')
@@ -75,6 +90,11 @@ class UserAuthController extends Controller
             )
             ->first();
 
+
+        $permssions = $this->userRepository->userAuthFormattedPermissions($user->role_id);
+        // 1. Store permissions in redis
+        $this->redisRepository->storeUserPermissions($permssions['redisPermissions'], $user->id);
+
         return response()->json(
             [
                 "user" => [
@@ -89,7 +109,8 @@ class UserAuthController extends Controller
                     "created_at" => $user->created_at,
                     "division" => $user->division,
                 ],
-                "permissions" => $this->userRepository->userAuthFormattedPermissions($user->role_id),
+                "permissions" => $permssions['permissions'],
+                'access_token' => $accessToken
             ],
             200,
             [],
@@ -122,6 +143,13 @@ class UserAuthController extends Controller
                 return response()->json([
                     'message' => __('app_translation.account_is_block'),
                 ], 401, [], JSON_UNESCAPED_UNICODE);
+            } else if (
+                $userStatus->status_id == StatusEnum::pending->value ||
+                $userStatus->status_id == StatusEnum::rejected->value
+            ) {
+                return response()->json([
+                    'message' => __('app_translation.your_account_un_app'),
+                ], 403, [], JSON_UNESCAPED_UNICODE);
             }
 
             $user = DB::table('users as u')
@@ -165,10 +193,13 @@ class UserAuthController extends Controller
                 false,                         // raw
                 'None' // for dev, use 'None' to allow cross-origin if needed
             );
+
+            $permssions = $this->userRepository->userAuthFormattedPermissions($user->role_id);
+            // 1. Store permissions in redis
+            $this->redisRepository->storeUserPermissions($permssions['redisPermissions'], $user->id);
             return response()->json(
                 [
-                    // "token" => $loggedIn['access_token'],
-                    "permissions" => $this->userRepository->userAuthFormattedPermissions($user->id),
+                    "permissions" => $permssions['permissions'],
                     "user" => [
                         "id" => $user->id,
                         "full_name" => $user->full_name,
@@ -180,8 +211,8 @@ class UserAuthController extends Controller
                         "job" => $user->job,
                         "created_at" => $user->created_at,
                         "division" => $user->division,
-
                     ],
+                    'access_token' => $loggedIn['access_token']
                 ],
                 200,
                 [],

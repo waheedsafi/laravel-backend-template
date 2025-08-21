@@ -14,4 +14,5 @@ Route::prefix('v1')->group(function () {
 });
 Route::prefix('v1')->middleware(["authorized:" . 'user:api'])->group(function () {
     Route::get('/media/profile', [MediaController::class, "profileFile"]);
+    Route::get('/media/private', [MediaController::class, "privateFile"]);
 });

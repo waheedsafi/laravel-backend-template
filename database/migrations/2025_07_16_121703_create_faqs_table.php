@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('faqs', function (Blueprint $table) {
             $table->id();
-            $table->integer('order');
+            $table->integer('order')->default(0);
             $table->unsignedBigInteger('faq_type_id');
             $table->foreign('faq_type_id')->references('id')->on('faq_types')
                 ->onUpdate('cascade')

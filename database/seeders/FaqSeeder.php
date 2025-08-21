@@ -105,7 +105,7 @@ class FaqSeeder extends Seeder
             "language_name" => "en",
             "faq_id" => $item->id
         ]);
-        Faq::factory()->create([
+        $item = Faq::factory()->create([
             "order" => 3,
             "is_active" => true,
             "faq_type_id" => $id

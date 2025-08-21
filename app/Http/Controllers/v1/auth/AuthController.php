@@ -25,6 +25,7 @@ class AuthController extends Controller
         return response()->json(
             [
                 "type" => $data['type'],
+                "access_token" => $data['access_token'],
             ],
             200,
             [],
